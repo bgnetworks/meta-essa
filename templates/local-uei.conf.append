@@ -1,0 +1,14 @@
+
+# Appended fragment from meta-bgn/meta-mx6sx/templates
+# Optimised build template
+
+VIRTUAL-RUNTIME_init_manager = "systemd"
+VIRTUAL-RUNTIME_initscript = "systemd-compat-units"
+
+DISTRO_FEATURES_append = " systemd"
+
+IMAGE_FSTYPES_append = " wic.gz"
+
+# Use with "core-image-minimal"
+# Uncomment the following lines to build a minimal sized image (for testing)
+# TEST_BUILD = "1"

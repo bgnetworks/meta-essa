@@ -1,0 +1,41 @@
+From f5ce8ba0ab2e25469f8e49bf264256d70a8924c8 Mon Sep 17 00:00:00 2001
+From: danie007 <daniel.selvan@jasmin-infotech.com>
+Date: Fri, 22 Oct 2021 11:50:07 +0530
+Subject: [PATCH] Enable encrypted boot support
+
+Signed-off-by: danie007 <daniel.selvan@jasmin-infotech.com>
+---
+ configs/mx6ul_14x14_evk_defconfig       | 7 +++++++
+ configs/mx6ul_14x14_evk_optee_defconfig | 7 +++++++
+ 2 files changed, 14 insertions(+)
+
+diff --git a/configs/mx6ul_14x14_evk_defconfig b/configs/mx6ul_14x14_evk_defconfig
+index 9f53047d7f..fb85e50320 100644
+--- a/configs/mx6ul_14x14_evk_defconfig
++++ b/configs/mx6ul_14x14_evk_defconfig
+@@ -101,3 +101,10 @@ CONFIG_EFI_PARTITION=y
+ # Added by Yocto to support the HAB features
+ # (Secure boot)
+ CONFIG_IMX_HAB=y
++
++# Added by Yocto to support the HAB features
++# (Encrypted boot)
++CONFIG_IMX_HAB=y
++CONFIG_FAT_WRITE=y
++CONFIG_CMD_DEKBLOB=y
++CONFIG_CMD_PRIBLOB=y
+diff --git a/configs/mx6ul_14x14_evk_optee_defconfig b/configs/mx6ul_14x14_evk_optee_defconfig
+index 16b749f1a2..2d366abce7 100644
+--- a/configs/mx6ul_14x14_evk_optee_defconfig
++++ b/configs/mx6ul_14x14_evk_optee_defconfig
+@@ -102,3 +102,10 @@ CONFIG_EFI_PARTITION=y
+ # Added by Yocto to support the HAB features
+ # (Secure boot)
+ CONFIG_IMX_HAB=y
++
++# Added by Yocto to support the HAB features
++# (Encrypted boot)
++CONFIG_IMX_HAB=y
++CONFIG_FAT_WRITE=y
++CONFIG_CMD_DEKBLOB=y
++CONFIG_CMD_PRIBLOB=y

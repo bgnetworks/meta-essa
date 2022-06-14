@@ -1,0 +1,154 @@
+From 94923154ff02a088aba9891b6885e8e899834a1e Mon Sep 17 00:00:00 2001
+From: danie007 <danilselvan@gmail.com>
+Date: Thu, 10 Jun 2021 13:11:18 +0530
+Subject: [PATCH 1/3] Add SDP support
+
+This patch is based on
+https://github.com/compulab-yokneam/meta-bsp-imx8mm/issues/13 to enable
+the SDP support in CompuLab iot-gate-imx8 EVK.
+
+This patch is further edited to correctly set the emmc_dev & sd_dev
+
+Signed-off-by: danie007 <danilselvan@gmail.com>
+---
+ arch/arm/dts/iot-gate-imx8.dts       |  3 +--
+ board/compulab/plat/imx8mm/spl/spl.c |  2 ++
+ configs/iot-gate-imx8_defconfig      | 13 +++++++++----
+ drivers/usb/host/ehci-mx6.c          |  5 +++++
+ include/configs/iot-gate-imx8.h      | 17 +++++++++++++++++
+ 5 files changed, 34 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/dts/iot-gate-imx8.dts b/arch/arm/dts/iot-gate-imx8.dts
+index f9d0793a47..57d1a5cc7d 100644
+--- a/arch/arm/dts/iot-gate-imx8.dts
++++ b/arch/arm/dts/iot-gate-imx8.dts
+@@ -63,8 +63,7 @@
+ };
+ 
+ &usbotg1 {
+-	vbus-supply = <&reg_vusb_5v>;
+-	dr_mode = "host";
++	dr_mode = "peripheral";
+ 	status = "okay";
+ };
+ 
+diff --git a/board/compulab/plat/imx8mm/spl/spl.c b/board/compulab/plat/imx8mm/spl/spl.c
+index 325d6b6a5f..bcc6196a5d 100644
+--- a/board/compulab/plat/imx8mm/spl/spl.c
++++ b/board/compulab/plat/imx8mm/spl/spl.c
+@@ -33,6 +33,8 @@ int spl_board_boot_device(enum boot_device boot_dev_spl)
+ 	case SD3_BOOT:
+ 	case MMC3_BOOT:
+ 		return BOOT_DEVICE_MMC2;
++	case USB_BOOT:
++		return BOOT_DEVICE_BOARD;
+ 	default:
+ 		return BOOT_DEVICE_NONE;
+ 	}
+diff --git a/configs/iot-gate-imx8_defconfig b/configs/iot-gate-imx8_defconfig
+index aa88e7956f..ca6a165732 100644
+--- a/configs/iot-gate-imx8_defconfig
++++ b/configs/iot-gate-imx8_defconfig
+@@ -20,7 +20,6 @@ CONFIG_SPL_LOAD_FIT=y
+ CONFIG_SPL_FIT_GENERATOR="arch/arm/mach-imx/mkimage_fit_atf.sh"
+ CONFIG_OF_SYSTEM_SETUP=y
+ CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=arch/arm/mach-imx/imx8m/imximage-8mm-lpddr4.cfg"
+-CONFIG_CONSOLE_MUX=y
+ CONFIG_DEFAULT_FDT_FILE="sb-iotgimx8-can.dtb"
+ CONFIG_BOARD_LATE_INIT=y
+ CONFIG_ARCH_MISC_INIT=y
+@@ -28,6 +27,9 @@ CONFIG_BOARD_EARLY_INIT_F=y
+ CONFIG_SPL_BOARD_INIT=y
+ CONFIG_SPL_SEPARATE_BSS=y
+ CONFIG_SPL_POWER_SUPPORT=y
++CONFIG_SPL_USB_HOST_SUPPORT=y
++CONFIG_SPL_USB_GADGET=y
++CONFIG_SPL_USB_SDP_SUPPORT=y
+ CONFIG_HUSH_PARSER=y
+ CONFIG_SYS_PROMPT="IOT-GATE-iMX8 => "
+ # CONFIG_BOOTM_NETBSD is not set
+@@ -49,7 +51,6 @@ CONFIG_CMD_EXT2=y
+ CONFIG_CMD_EXT4=y
+ CONFIG_CMD_FAT=y
+ CONFIG_CMD_FS_GENERIC=y
+-CONFIG_EFI_PARTITION=y
+ CONFIG_OF_CONTROL=y
+ CONFIG_DEFAULT_DEVICE_TREE="iot-gate-imx8"
+ CONFIG_ENV_IS_IN_MMC=y
+@@ -59,6 +60,10 @@ CONFIG_REGMAP=y
+ CONFIG_SYSCON=y
+ CONFIG_CLK_COMPOSITE_CCF=y
+ CONFIG_CLK_IMX8MM=y
++CONFIG_USB_FUNCTION_FASTBOOT=y
++CONFIG_FASTBOOT_BUF_ADDR=0x42800000
++CONFIG_FASTBOOT_BUF_SIZE=0x40000000
++CONFIG_FASTBOOT_FLASH=y
+ CONFIG_MXC_GPIO=y
+ CONFIG_CMD_PCA953X=y
+ CONFIG_DM_PCA953X=y
+@@ -84,6 +89,7 @@ CONFIG_DM_THERMAL=y
+ CONFIG_NXP_TMU=y
+ CONFIG_USB=y
+ CONFIG_DM_USB=y
++# CONFIG_DM_USB_GADGET is not set
+ CONFIG_USB_EHCI_HCD=y
+ CONFIG_USB_GADGET=y
+ CONFIG_USB_GADGET_MANUFACTURER="FSL"
+@@ -91,10 +97,9 @@ CONFIG_USB_GADGET_VENDOR_NUM=0x0525
+ CONFIG_USB_GADGET_PRODUCT_NUM=0xa4a5
+ CONFIG_CI_UDC=y
+ CONFIG_SDP_LOADADDR=0x40400000
+-CONFIG_USB_GADGET_DOWNLOAD=y
++CONFIG_USB_FUNCTION_SDP=y
+ CONFIG_USB_HOST_ETHER=y
+ CONFIG_USB_ETHER_ASIX88179=y
+ CONFIG_EXT4_WRITE=y
+-CONFIG_FAT_WRITE=y
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ # CONFIG_EFI_LOADER is not set
+diff --git a/drivers/usb/host/ehci-mx6.c b/drivers/usb/host/ehci-mx6.c
+index 035e0b6715..f510efcaab 100644
+--- a/drivers/usb/host/ehci-mx6.c
++++ b/drivers/usb/host/ehci-mx6.c
+@@ -127,8 +127,13 @@ int ehci_hcd_init(int index, enum usb_init_type init,
+ 
+ 	if ((type == init) || (type == USB_INIT_DEVICE))
+ 		board_ehci_power(index, (type == USB_INIT_DEVICE) ? 0 : 1);
++
++#if 0
++	# This is an iot-gate-imx8 special case
++	# make the device work as a peripheral device.
+ 	if (type != init)
+ 		return -ENODEV;
++#endif
+ 	if (type == USB_INIT_DEVICE)
+ 		return 0;
+ 
+diff --git a/include/configs/iot-gate-imx8.h b/include/configs/iot-gate-imx8.h
+index 9774949456..f4fb55c6e2 100644
+--- a/include/configs/iot-gate-imx8.h
++++ b/include/configs/iot-gate-imx8.h
+@@ -16,6 +16,23 @@
+ 
+ #undef CONFIG_EXTRA_ENV_SETTINGS
+ #undef CONFIG_BOOTCOMMAND
++#undef CONFIG_MFG_ENV_SETTINGS
++
++#define CONFIG_MFG_ENV_SETTINGS \
++	"mfgtool_args=setenv bootargs console=${console},${baudrate} " \
++		"rdinit=/linuxrc " \
++		"g_mass_storage.stall=0 g_mass_storage.removable=1 " \
++		"g_mass_storage.idVendor=0x066F g_mass_storage.idProduct=0x37FF "\
++		"g_mass_storage.iSerialNumber=\"\" "\
++		"clk_ignore_unused "\
++		"\0" \
++	"initrd_addr=0x43800000\0" \
++	"initrd_high=0xffffffff\0" \
++	"emmc_dev=2\0" \
++	"sd_dev=1\0" \
++	"bootcmd_mfg=run mfgtool_args;  if iminfo ${initrd_addr}; then "\
++					   "booti ${loadaddr} ${initrd_addr} ${fdt_addr};"\
++					"else echo \"Run fastboot ...\"; fastboot 0; fi\0" \
+ 
+ #define ENV_CONSOLE console=ttymxc2,115200 earlycon=ec_imx6q,0x30880000,115200
+ #define CONFIG_EXTRA_ENV_SETTINGS		\

@@ -1,0 +1,38 @@
+From 95bb0ce7f76f8f5ffb8bbab3e65b21a34222d400 Mon Sep 17 00:00:00 2001
+From: danie007 <daniel.selvan@jasmin-infotech.com>
+Date: Fri, 22 Oct 2021 11:44:01 +0530
+Subject: [PATCH] Enable secure boot support
+
+- HAB status logs retrievement through the hab_status command
+- Support to extend the root of trust
+
+Signed-off-by: danie007 <daniel.selvan@jasmin-infotech.com>
+---
+ configs/mx6ul_14x14_evk_defconfig       | 4 ++++
+ configs/mx6ul_14x14_evk_optee_defconfig | 4 ++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/configs/mx6ul_14x14_evk_defconfig b/configs/mx6ul_14x14_evk_defconfig
+index 38f606ad21..9f53047d7f 100644
+--- a/configs/mx6ul_14x14_evk_defconfig
++++ b/configs/mx6ul_14x14_evk_defconfig
+@@ -97,3 +97,7 @@ CONFIG_FASTBOOT_BUF_ADDR=0x83800000
+ CONFIG_FASTBOOT_BUF_SIZE=0x40000000
+ CONFIG_FASTBOOT_FLASH=y
+ CONFIG_EFI_PARTITION=y
++
++# Added by Yocto to support the HAB features
++# (Secure boot)
++CONFIG_IMX_HAB=y
+diff --git a/configs/mx6ul_14x14_evk_optee_defconfig b/configs/mx6ul_14x14_evk_optee_defconfig
+index a12cf78879..16b749f1a2 100644
+--- a/configs/mx6ul_14x14_evk_optee_defconfig
++++ b/configs/mx6ul_14x14_evk_optee_defconfig
+@@ -98,3 +98,7 @@ CONFIG_FASTBOOT_BUF_ADDR=0x83800000
+ CONFIG_FASTBOOT_BUF_SIZE=0x40000000
+ CONFIG_FASTBOOT_FLASH=y
+ CONFIG_EFI_PARTITION=y
++
++# Added by Yocto to support the HAB features
++# (Secure boot)
++CONFIG_IMX_HAB=y

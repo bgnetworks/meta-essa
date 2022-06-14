@@ -1,0 +1,61 @@
+
+# Appended fragment from meta-essa-mx8mm/templates
+# Optimized build template
+
+# Uncompressed SDCARD image for using with UUU tool
+IMAGE_FSTYPES:append = " wic"
+
+# For debug purposes, use present time
+BUILD_REPRODUCIBLE_BINARIES = "0"
+
+# Optimization
+
+# Disabling test utilities
+IMAGE_INSTALL:remove += " \
+    packagegroup-fsl-tools-testapps \
+    wic-tools \
+    "
+
+# Ripping down unwanted DISTRO features
+DISTRO_FEATURES:remove += " \
+    bluetooth \
+    wifi \
+    3g \
+    opengl \
+    wayland \
+    x11 \
+    nfc \
+    nfs \
+    etx2 \
+    ext3 \
+    jffs2 \
+    alsa \
+    touchscreen \
+    wic-tools \
+    lttng-modules \
+    dbus-test \
+    gnome-desktop-testing \
+    "
+
+# Removing Unused Packages from the image
+PACKAGE_EXCLUDE = " \
+    perl5 \
+    sqlite3 \
+    udev-hwdb \
+    bluez3 \
+    bluez4\
+    bluez5\
+    wic-tools \
+    lttng-modules \
+    dbus-test \
+    gnome-desktop-testing \
+    "
+
+# Setting the root password as toor
+# INHERIT += "extrausers"
+# EXTRA_USERS_PARAMS = "usermod -p $(openssl passwd toor) root"
+
+# Having separate download & shared state cache speeds up build and save space
+# Replace $HOME with your home directory
+# DL_DIR = "$HOME/.yocto/downloads/"
+# SSTATE_DIR = "$HOME/.yocto/mx8mm/zeus/sstate-cache/"

@@ -1,0 +1,23 @@
+From c6572ad2b5d4800b7aed06625232b89ea2161352 Mon Sep 17 00:00:00 2001
+From: Sivaprasad <sivaprasad.sv@jasmin-infotech.com>
+Date: Fri, 18 Mar 2022 14:17:53 +0530
+Subject: [PATCH] HAB-encrypted-boot
+
+---
+ configs/imx8mm_evk_defconfig | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/configs/imx8mm_evk_defconfig b/configs/imx8mm_evk_defconfig
+index 521ba35659..ab33734aff 100644
+--- a/configs/imx8mm_evk_defconfig
++++ b/configs/imx8mm_evk_defconfig
+@@ -180,3 +180,9 @@ CONFIG_EFI_RUNTIME_UPDATE_CAPSULE=y
+ CONFIG_EFI_CAPSULE_ON_DISK=y
+ CONFIG_EFI_CAPSULE_FIRMWARE_RAW=y
+ CONFIG_EFI_SECURE_BOOT=y
++
++CONFIG_IMX_HAB=y
++CONFIG_FAT_WRITE=y
++CONFIG_CMD_DEKBLOB=y
++CONFIG_IMX_OPTEE_DEK_ENCAP=y
++CONFIG_CMD_PRIBLOB=y

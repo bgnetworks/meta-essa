@@ -1,0 +1,25 @@
+From 4577f383c849c8d11403429f7623661f95526c79 Mon Sep 17 00:00:00 2001
+From: danie007 <daniel.selvan@jasmin-infotech.com>
+Date: Tue, 22 Jun 2021 12:32:46 +0530
+Subject: [PATCH] Added SPL offset in IVT reserv1
+
+This is required by BGN-SAT for proper signing of the bootloader.
+
+Signed-off-by: danie007 <daniel.selvan@jasmin-infotech.com>
+---
+ iMX8M/mkimage_imx8.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/iMX8M/mkimage_imx8.c b/iMX8M/mkimage_imx8.c
+index 54828d1..fcece1c 100644
+--- a/iMX8M/mkimage_imx8.c
++++ b/iMX8M/mkimage_imx8.c
+@@ -1471,6 +1471,8 @@ int main(int argc, char **argv)
+ 			file_off += CSF_SIZE - sizeof(flash_header_v2_t);
+ 		}else {
+ 			sld_header_off = sld_src_off - rom_image_offset;
++			if (version == ROM_V1)
++				imx_header[IMAGE_IVT_ID].fhdr.reserved1 = sld_header_off - header_image_off; /* Record the second bootloader relative offset in image's IVT reserved1*/
+ 			sld_fd = open(sld_img, O_RDONLY | O_BINARY);
+ 			if (sld_fd < 0) {
+ 				fprintf(stderr, "%s: Can't open: %s\n",
