@@ -10,6 +10,8 @@
 # Daniel Selvan D., Jasmin Infotech, 06-2021
 #
 
+LOCAL_CONF_APPEND="local-${MACHINE}.conf.append"
+
 . imx-setup-release.sh $@
 
 # If NXP script failed, halt
@@ -22,7 +24,7 @@ echo "" >>conf/bblayers.conf
 echo "# ESSA integration layer" >>conf/bblayers.conf
 echo "BBLAYERS += \" \${BSPDIR}/sources/meta-bgn-essa\"" >>conf/bblayers.conf
 
-cat ../sources/meta-bgn-essa/templates/local.conf.append >>conf/local.conf
+cat ../sources/meta-bgn-essa/templates/${LOCAL_CONF_APPEND} >>conf/local.conf
 
 echo ""
 echo "BGN-ESSA integration completed!"
