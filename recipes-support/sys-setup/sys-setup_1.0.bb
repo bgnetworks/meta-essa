@@ -12,6 +12,7 @@ LICENSE = "CLOSED"
 SRC_URI = " \
     file://sys_setup.sh \
     file://zsend.sh \
+    file://disk_benchmark.sh \
 "
 
 RDEPENDS:${PN} += "bash"
