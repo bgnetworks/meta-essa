@@ -7,7 +7,7 @@
     <img src="docs/assets/BGN_logo.png" alt="BGN_logo" />
 </p>
 
-# meta-bgn-essa
+# meta-essa
 
 
 [BG Network's](https://bgnet.works/) [Embedded Security Software Architecture](https://bgnet.works/bgn-essa/) (ESSA), a collection of scripts, recipes, configurations, and documentation for Linux, enhances cybersecurity for IoT devices, including secure boot, encryption and/or authentication. The ESSA enables engineers to extend a hardware root of trust to secure U-Boot, the Linux kernel, and applications in the root file system.
