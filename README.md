@@ -1,81 +1,45 @@
 <!-- File: README.md
      Author: Daniel Selvan D., Jasmin Infotech
+     Author: RJ Fendricks, BG Networks
 -->
 
-# meta-essa-mx8mm
+<p align="center">
+    <img src="docs/assets/BGN_logo.png" alt="BGN_logo" />
+</p>
 
-This repository is based on [i.MX Linux Yocto Project BSP](https://source.codeaurora.org/external/imx/imx-manifest/tree/?h=imx-linux-hardknott) (_5.10.72-2.2.0.xml release_) on NXP's [Evaluation Kit for the i.MX 8M Mini Applications Processor](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/evaluation-kit-for-the-i-mx-8m-mini-applications-processor:8MMINILPD4-EVK).
+# meta-bgn-essa
 
-## Supported board
 
-**NOTE**: This is release is not a production release.
+[BG Network's](https://bgnet.works/) [Embedded Security Software Architecture](https://bgnet.works/bgn-essa/) (ESSA), a collection of scripts, recipes, configurations, and documentation for Linux, enhances cybersecurity for IoT devices, including secure boot, encryption and/or authentication. The ESSA enables engineers to extend a hardware root of trust to secure U-Boot, the Linux kernel, and applications in the root file system.
 
-The following board is the only board tested in this release.
+To provide strong cybersecurity without compromising performance or functionality, this architecture leverages:
+
+- In-silicon cryptographic accelerators and secure memory
+- Linux security features
+
+The ESSA is Linux based and when used in conjunction with the SAT will support:
+
+- Hardware root of trust extended to the rootfs and software application layer Configuration of Linux Device Mapper (DM) cryptographic functions.
+- Use of AES-XTS and HMAC-SHA256 cryptographic algorithms.
+- Root of trust extended to Linux userspace.
+
+## Supported boards
+
+The following boards are supported natively by this layer:
 
 - NXP i.<d/>MX 8M Mini EVK (imx8mmevk) - [8MMINILPD4-EVK](https://www.nxp.com/part/8MMINILPD4-EVK#/)
+- NXP's i.<d/>MX 6 SoloX SABRE (imx6sxsabresd) - [i.MX 6 SoloX SABRE](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/sabre-board-for-smart-devices-based-on-the-i-mx-6solox-applications-processors:RD-IMX6SX-SABRE)
+- NXP's i.<d/>MX 6 UltraLite Evaluation Kit (imx6ulevk) - [i.MX 6 UltraLite EVK](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/i-mx6ultralite-evaluation-kit:MCIMX6UL-EVK)
 
 ## Quick Start Guide
 
-See the i.<d/>MX Yocto Project User's Guide for instructions on installing repo.
+See the [Quick Start Guide](docs/Quick_Start_Guide.md) for instructions of building core image and for a quick demo of **DM-Crypt with CAAM's black key**.
 
-1. Install the i.<d/>MX Linux BSP & ESSA repo
+## Detailed Guide
 
-```bash
-repo init -u https://source.codeaurora.org/external/imx/imx-manifest -b imx-linux-hardknott -m imx-5.10.72-2.2.0.xml
-
-# Can be downloaded from public repositories only
-wget --directory-prefix .repo/manifests https://raw.githubusercontent.com/bgnetworks/meta-mender-imx8mm/hardknott/meta-essa-mx8mm/scripts/imx-5.10.72-2.2.0_essa.xml
-repo init -m imx-5.10.72-2.2.0_essa.xml
-```
-
-2. Download the Yocto Project Layers:
-
-```bash
-repo sync -j$(nproc)
-```
-
-If you encounter errors on repo init, remove the `.repo` directory and try `repo init` again.
-
-3. Run i.<d/>MX Linux Yocto Project Setup:
-
-```bash
-$ MACHINE=imx8mmevk DISTRO=fsl-imx-xwayland source mx8mm-setup-essa.sh -b <build_folder>
-```
-
-where
-
-- `<build_folder>` specifies the build folder name
-
-After this your system will be configured to start a Yocto Project build.
-
-## Build images
-
-#### Building Wayland
-
-```bash
-MACHINE=imx8mmevk DISTRO=fsl-imx-xwayland source mx8mm-setup-essa.sh -b build-wayland
-bitbake core-image-base
-```
-
-**core-image-base**: "A console-only image that fully supports the target device hardware."
+To know more about the [BG Networks ESSA](https://bgnet.works/bgn-essa) and its potential capabilities, [contact BG Networks](https://bgnet.works/contact-us).
 
 ## Contributing
 
-To contribute to the development of this BSP and/or submit patches for new boards please send the patches as bellow:
+To contribute to the development of this BSP and/or submit patches for new boards please feel free to [create pull requests](https://github.com/bgnetworks/meta-essa-mx6ul/pulls).
 
-- meta-mender-imx: files and configuration for mender integration with [i.MX 8mm EVK](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/evaluation-kit-for-the-i-mx-8m-mini-applications-processor:8MMINILPD4-EVK)
-  Path: sources/meta-essa-mx8mm
-  GIT: https://github.com/mendersoftware/meta-mender-community.git
-
-## Maintainer
-
-The author(s) and maintainer(s) of this layer is(are):
-
-- Daniel Selvan D - <daniel.selvan@jasmin-infotech.com> - [danie007](https://github.com/danie007)
-- Sivaprasad SV - <sivaprasad.sv@jasmin-infotech.com> - [svsprasad96](https://github.com/svsprasad96)
-
-Always include the maintainers when suggesting code changes to this layer.
-
-## Limitation
-
-`repo sync` won't work on private repositories and hence the above commands can only be executed successfully, if this repo's visibility changes to **Public**
