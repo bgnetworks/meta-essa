@@ -22,7 +22,7 @@ LOCAL_CONF_APPEND="local-${MACHINE}.conf.append"
 
 echo "" >>conf/bblayers.conf
 echo "# ESSA integration layer" >>conf/bblayers.conf
-echo "BBLAYERS += \" \${BSPDIR}/sources/meta-bgn-essa\"" >>conf/bblayers.conf
+echo "BBLAYERS += \" \${BSPDIR}/sources/meta-essa\"" >>conf/bblayers.conf
 
 cat ../sources/meta-bgn-essa/templates/${LOCAL_CONF_APPEND} >>conf/local.conf
 
