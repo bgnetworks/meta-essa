@@ -161,7 +161,7 @@ index 457b5ae123..7df62d6ed6 100644
 +	uint16_t offset = (uint16_t)env_get_ulong("fastboot_offset", 10, 0);
 +
 +	// Get number to fetch
-+	int keySize = (int)env_get_ulong("fastboot_size", 10, DFLT_DEKBLOB_KEYSIZE);
++	int keySize = (int)env_get_ulong("fastboot_keysize", 10, DFLT_DEKBLOB_KEYSIZE);
 +
 +	if (keySize == 256)
 +		dekSlice = DEKBLOB_SIZE_256 / 4;
