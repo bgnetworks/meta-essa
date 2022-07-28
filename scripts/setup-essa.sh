@@ -24,7 +24,7 @@ echo "" >>conf/bblayers.conf
 echo "# ESSA integration layer" >>conf/bblayers.conf
 echo "BBLAYERS += \" \${BSPDIR}/sources/meta-essa\"" >>conf/bblayers.conf
 
-cat ../sources/meta-bgn-essa/templates/${LOCAL_CONF_APPEND} >>conf/local.conf
+cat ${BSPDIR}/sources/meta-essa/templates/${LOCAL_CONF_APPEND} >>conf/local.conf
 
 echo ""
 echo "BGN-ESSA integration completed!"
