@@ -23,7 +23,7 @@ index 9f53047d7f..fb85e50320 100644
 +CONFIG_IMX_HAB=y
 +CONFIG_FAT_WRITE=y
 +CONFIG_CMD_DEKBLOB=y
-+CONFIG_CMD_PRIBLOB=y
++CONFIG_CMD_PRIBLOB=n
 diff --git a/configs/mx6ul_14x14_evk_optee_defconfig b/configs/mx6ul_14x14_evk_optee_defconfig
 index 16b749f1a2..2d366abce7 100644
 --- a/configs/mx6ul_14x14_evk_optee_defconfig
@@ -38,4 +38,4 @@ index 16b749f1a2..2d366abce7 100644
 +CONFIG_IMX_HAB=y
 +CONFIG_FAT_WRITE=y
 +CONFIG_CMD_DEKBLOB=y
-+CONFIG_CMD_PRIBLOB=y
++CONFIG_CMD_PRIBLOB=n
