@@ -7,4 +7,4 @@ BAUDRATE=115200
 #BAUDRATE=57600
 
 stty -F $DEV $BAUDRATE
-sz /data/caam/enckey.bb >$DEV <$DEV
+sx /data/caam/enckey.bb >$DEV <$DEV
