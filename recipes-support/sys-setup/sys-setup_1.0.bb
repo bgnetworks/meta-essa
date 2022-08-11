@@ -11,7 +11,7 @@ LICENSE = "CLOSED"
 
 SRC_URI = " \
     file://sys_setup.sh \
-    file://zsend.sh \
+    file://xsend.sh \
     file://disk_benchmark.sh \
 "
 
@@ -24,13 +24,13 @@ do_install() {
     install -d ${D}/home/root
       
     install -m 0755 ${WORKDIR}/sys_setup.sh ${D}/data/
-    install -m 0755 ${WORKDIR}/zsend.sh ${D}/home/root/
+    install -m 0755 ${WORKDIR}/xsend.sh ${D}/home/root/
     install -m 0755 ${WORKDIR}/disk_benchmark.sh ${D}/home/root/
 }
 
 FILES:${PN} += " \
     /data/sys_setup.sh \
-    /home/root/zsend.sh \
+    /home/root/xsend.sh \
     home/root/disk_benchmark.sh \
 "
 FILES:${PN} += "/dmblk/"
