@@ -1,21 +1,14 @@
-From bb02553b3077c9ace3346d3b2693374ff785a835 Mon Sep 17 00:00:00 2001
-From: danie007 <daniel.selvan@jasmin-infotech.com>
-Date: Thu, 17 Jun 2021 13:56:35 +0530
+From 91a54aa1438bcf7923ad6d5553dcc6c0c1b2f91b Mon Sep 17 00:00:00 2001
+From: RJ Fendricks <robert.fendricks@bgnetworks.net>
+Date: Fri, 19 Aug 2022 15:46:42 -0400
 Subject: [PATCH] Add fastboot commands
 
-Fastboot commands,
-  1. read-dekblob
-  2. read-fuses
-  3. read-srktbl
-are added to automate the encryption with "UUU" tool
-
-Signed-off-by: danie007 <daniel.selvan@jasmin-infotech.com>
 ---
  drivers/fastboot/fb_fsl/fb_fsl_getvar.c | 140 +++++++++++++++++++++++-
  1 file changed, 135 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/fastboot/fb_fsl/fb_fsl_getvar.c b/drivers/fastboot/fb_fsl/fb_fsl_getvar.c
-index 457b5ae123..7df62d6ed6 100644
+index 49caf3d7eb..3852419db8 100644
 --- a/drivers/fastboot/fb_fsl/fb_fsl_getvar.c
 +++ b/drivers/fastboot/fb_fsl/fb_fsl_getvar.c
 @@ -1,6 +1,9 @@
