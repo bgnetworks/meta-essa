@@ -13,7 +13,7 @@ SRC_URI:append:imx6ulevk = " \
 
 SRC_URI:append:imx6sxsabresd = " \
     file://0001-Enable-secure-boot-support.patch \
-    file://0002-Enable-QSPI-boot-support.patch \
+    ${@bb.utils.contains('ESSA_BOOT_MEDIUM', 'QSPI', 'file://0002-Enable-QSPI-boot-support.patch', '', d)} \
     file://0003-Enable-encrypted-boot-support.patch \
     file://0004-Add-fastboot-commands.patch \
 "
