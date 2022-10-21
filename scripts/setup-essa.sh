@@ -17,7 +17,7 @@ LOCAL_CONF_APPEND="local-${MACHINE}.conf.append"
 # If NXP script failed, halt
 (($? != 0)) && {
     echo "init script failure"
-    exit 1
+    return 1
 }
 
 echo "" >>conf/bblayers.conf
