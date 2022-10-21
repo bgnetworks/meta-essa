@@ -11,6 +11,7 @@
 #
 
 LOCAL_CONF_APPEND="local-${MACHINE}.conf.append"
+ESSA_DIR="$PWD/sources/meta-essa"
 
 . imx-setup-release.sh $@
 
@@ -24,7 +25,7 @@ echo "" >>conf/bblayers.conf
 echo "# ESSA integration layer" >>conf/bblayers.conf
 echo "BBLAYERS += \" \${BSPDIR}/sources/meta-essa\"" >>conf/bblayers.conf
 
-cat ${BSPDIR}/sources/meta-essa/templates/${LOCAL_CONF_APPEND} >>conf/local.conf
+cat ${ESSA_DIR}/templates/${LOCAL_CONF_APPEND} >>conf/local.conf
 
 echo ""
 echo "BGN-ESSA integration completed!"
