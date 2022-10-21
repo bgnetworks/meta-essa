@@ -18,7 +18,7 @@ ESSA_DIR="$PWD/sources/meta-essa"
 # If NXP script failed, halt
 (($? != 0)) && {
     echo "init script failure"
-    exit 1
+    return 1
 }
 
 echo "" >>conf/bblayers.conf
