@@ -10,11 +10,11 @@
 
 # 1. Introduction
 
-[BG Networks](https://bgnet.works/)' Embedded Security Software Architecture ([ESSA](https://bgnet.works/security-automation-tools-overview/embedded-security-software-architecture/)) enhances cybersecurity for IoT devices, including secure boot, encryption, authentication, and secure software updates. The ESSA enables engineers to extend a hardware root of trust to secure U-Boot, the Linux kernel, and applications in the root file system. This document will guide the user on implementing BG Network’s ESSA on a [NXP’s i.MX6 SoloX SABRE EVK](shttps://www.nxp.com/imx6sxsabre) board (`imx6sxsabresd`).
+[BG Networks](https://bgnet.works/)' Embedded Security Software Architecture ([ESSA](https://bgnet.works/security-automation-tools-overview/embedded-security-software-architecture/)) enhances cybersecurity for IoT devices, including secure boot, encryption, authentication, and secure software updates. The ESSA enables engineers to extend a hardware root of trust to secure U-Boot, the Linux kernel, and applications in the root file system.
 
 # 2. Setup
 
-The following packages are needed to build an image on a headless system. The build has been tested with `Ubuntu 20.04 (LTS)`.
+The following packages are needed to build an image on a headless system. The build has been tested with `Ubuntu 20.04 (LTS)` and `Ubuntu 22.04 (LTS)`.
 
 ```bash
 sudo apt install -y gawk wget git diffstat unzip texinfo gcc build-essential \
@@ -32,44 +32,39 @@ For other supported Linux distributions, please refer to the [Yocto Project Refe
 
 # 2. Yocto build
 
-The following outlines the steps needed build the core image using Yocto with BGN-ESSA.
+The following steps outline how to build an example BSP using the meta-essa layer.
 
-Create directory for the ESSA BSP for the iMX6SX SABRE EVK board:
+Create a directory for the BSP:
 
 ```bash
-mkdir ~/meta-bgn-essa-mx6sx
-cd ~/meta-bgn-essa-mx6sx
+mkdir ~/yocto
+cd ~/yocto
 ```
 
-Initialize and sync repository:
+Initialize and sync the repository:
 
 ```bash
-# Initiating NXP BSP
-repo init -u git://source.codeaurora.org/external/imx/imx-manifest.git -b imx-linux-hardknott -m imx-5.10.52-2.1.0.xml
+# Initializing NXP BSP
+repo init -u git://source.codeaurora.org/external/imx/imx-manifest.git -b imx-linux-kirkstone -m imx-5.15.32-2.0.0.xml
 
 # Download ESSA manifest
-wget --directory-prefix .repo/manifests https://raw.githubusercontent.com/bgnetworks/meta-essa-mx6sx/hardknott/scripts/imx-5.10.52-2.1.0-bgn-essa.xml
-repo init -m imx-5.10.52-2.1.0-bgn-essa.xml
+wget --directory-prefix .repo/manifests https://raw.githubusercontent.com/bgnetworks/meta-essa-mx6sx/hardknott/scripts/imx-5.15.32-2.0.0-bgn-essa.xml
+repo init -m imx-5.15.32-2.0.0-bgn-essa.xml
 
 repo sync -j$(nproc)
 ```
 
-The following files and directories are located in the `meta-essa-mx6sx` directory:
-
-<p align="left">
-    <img src="assets/sync_dir.png" width=600 alt="sync_dir" />
-</p>
-
-The Yocto meta directories are located in the `sources` directory:
-
-<p align="left">
-    <img src="assets/yocto_meta_dir.png" width=800 alt="yocto_meta_dir" />
-</p>
-
-Setup the build environment:
+Setup the build environment based on the target machine:
 
 ```bash
-MACHINE=imx6sxsabresd DISTRO=fsl-imx-fb source mx6sx-setup-essa.sh -b build
+# Targetting the i.MX6SX Sabre SD
+MACHINE=imx6sxsabresd DISTRO=fsl-imx-fb source setup-essa.sh -b build
+
+# Targetting the i.MX6UL EVK
+MACHINE=imx6ulevk DISTRO=fslc-framebuffer source setup-essa.sh -b build
+
+# Targetting the i.MX8MM EVK
+MACHINE=imx8mmevk DISTRO=fsl-imx-wayland source setup-essa.sh -b build
 ```
 
 Build the core image:
@@ -80,7 +75,7 @@ bitbake core-image-base
 
 **Note**: _The initial image build might take a few hours_
 
-# 4. Program the image into the board SD-card
+# 4. Program the image into the board SD-card (i.MX6SX)
 
 Install uuu tool:
 
@@ -91,7 +86,7 @@ sudo snap install universal-update-utility
 Change to the image directory:
 
 ```bash
-cd ~/meta-bgn-essa-mx6sx/build/tmp/deploy/images/imx6sxsabresd
+cd ~/yocto/build/tmp/deploy/images/imx6sxsabresd
 ```
 
 The following shows all images created in build process. The full image for flash the iMX6SX SABRE EVK board is `core-image-base-imx6sxsabresd.wic.bz2`
@@ -162,9 +157,9 @@ Power up the iMX6SX SABRE EVK board and log in as: `root`
 
 # 6. Block encryption example: Creating an encrypted block device
 
-An encrypted device can be created using a black key mechanism supported by the i.MX6SX. A black key is a secure key that can only be read back in an encrypted form. The following outlines steps to create an encrypted device, mount the device to the filesystem, add a file that is automatically encrypted, and access the encrypted device after rebooting.
+An encrypted device can be created by using black keys. A black key is a secure key that can only be read back in an encrypted form. The following outlines steps to create an encrypted device, mount the device to the filesystem, add a file that is automatically encrypted, and access the encrypted device after rebooting.
 
-Create black key and key blob using i.MX6SX’s CAAM:
+Create black key and key blob using the CAAM:
 
 ```bash
 caam-keygen create mykey ecb -s 16
@@ -230,7 +225,7 @@ dmsetup remove myEncryptedBlock
 
 # 7. Block encryption example: Using an encrypted block device
 
-Reboot the iMX6SX EVK board and log in as: root
+Reboot the board and log in as: root
 
 Import the block key blob to create the black key used for disk encryption, add the key to the Linux keyring, and use the key for the encrypted block device:
 
