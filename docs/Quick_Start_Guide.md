@@ -48,7 +48,7 @@ Initialize and sync the repository:
 repo init -u git://source.codeaurora.org/external/imx/imx-manifest.git -b imx-linux-kirkstone -m imx-5.15.32-2.0.0.xml
 
 # Download ESSA manifest
-wget --directory-prefix .repo/manifests https://raw.githubusercontent.com/bgnetworks/meta-essa-mx6sx/hardknott/scripts/imx-5.15.32-2.0.0-bgn-essa.xml
+wget --directory-prefix .repo/manifests https://raw.githubusercontent.com/bgnetworks/meta-essa/kirkstone/scripts/imx-5.15.32-2.0.0-bgn-essa.xml
 repo init -m imx-5.15.32-2.0.0-bgn-essa.xml
 
 repo sync -j$(nproc)
