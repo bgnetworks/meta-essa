@@ -22,6 +22,10 @@ chrpath socat cpio python3 python3-pip python3-pexpect xz-utils debianutils \
 iputils-ping python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev pylint3 \
 xterm python3-subunit mesa-common-dev zstd liblz4-tool snapd minicom
 
+# If Python2.X has already been installed, we need to make sure that the
+# python binary in the path is linked to python3
+sudo apt install python-is-python3
+
 # Downloading and installing repo tool
 curl https://storage.googleapis.com/git-repo-downloads/repo > ~/repo
 chmod a+x ~/repo
