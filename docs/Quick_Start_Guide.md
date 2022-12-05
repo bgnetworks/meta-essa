@@ -23,7 +23,7 @@ iputils-ping python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev pylint3 \
 xterm python3-subunit mesa-common-dev zstd liblz4-tool snapd minicom
 
 # Downloading and installing repo tool
-curl https://storage.googleapis.com/git-repo-downloads/repo ~/repo
+curl https://storage.googleapis.com/git-repo-downloads/repo > ~/repo
 chmod a+x ~/repo
 sudo cp ~/repo /usr/bin
 ```
