@@ -49,7 +49,7 @@ Initialize and sync the repository:
 
 ```bash
 # Initializing NXP BSP
-repo init -u git://source.codeaurora.org/external/imx/imx-manifest.git -b imx-linux-kirkstone -m imx-5.15.32-2.0.0.xml
+repo init -u https://github.com/nxp-imx/imx-manifest.git -b imx-linux-kirkstone -m imx-5.15.32-2.0.0.xml
 
 # Download ESSA manifest
 wget --directory-prefix .repo/manifests https://raw.githubusercontent.com/bgnetworks/meta-essa/kirkstone/scripts/imx-5.15.32-2.0.0-bgn-essa.xml
