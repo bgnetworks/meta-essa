@@ -23,14 +23,14 @@ create <key_name> <key_enc> <key_mode> <key_val> \
 import <blob_name> <key_name> \
  <blob_name> the absolute path of the file that contains the blob \
  <key_name> the name of the file that will contain the black key."
-HOMEPAGE = "https://source.codeaurora.org/external/imx/keyctl_caam/tree/?h=lf-5.10.y_2.0.0"
+HOMEPAGE = "https://github.com/nxp-imx/keyctl_caam"
 
 LICENSE = "CLOSED"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8636bd68fc00cc6a3809b7b58b45f982"
 
 SRC_BRANCH = "lf-5.10.y_2.0.0"
 LOCALVERSION = "-2.0.0"
-PACKAGE_SRC = "git://source.codeaurora.org/external/imx/keyctl_caam.git;protocol=https"
+PACKAGE_SRC = "git://github.com/nxp-imx/keyctl_caam.git;protocol=https"
 SRC_URI = "${PACKAGE_SRC};branch=${SRC_BRANCH}"
 
 # As on Mar 21 22
