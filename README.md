@@ -1,6 +1,5 @@
 <!-- File: README.md
-     Author: Daniel Selvan D., Jasmin Infotech
-     Author: RJ Fendricks, BG Networks
+     Author: saravanan.J, Jasmin Infotech
 -->
 
 <p align="center">
@@ -10,18 +9,19 @@
 # meta-essa
 
 
-[BG Network's](https://bgnet.works/) [Embedded Security Software Architecture](https://bgnet.works/bgn-essa/) (ESSA), a collection of scripts, recipes, configurations, and documentation for Linux, enhances cybersecurity for IoT devices, including secure boot, encryption and/or authentication. The ESSA enables engineers to extend a hardware root of trust to secure U-Boot, the Linux kernel, and applications in the root file system.
+Yocto Layer for Creating Customized InitramFS for RootFS Encryption/Decryption:
 
-To provide strong cybersecurity without compromising performance or functionality, this architecture leverages:
+This layer provides information about customized Yocto layer for initramfs to encrypt & decrypt rootFS. Layer has support to boot initramfs at uboot.
+Included Packages
 
-- In-silicon cryptographic accelerators and secure memory
-- Linux security features
+    - Hardware root of trust extended to the initramfs and software application layer Configuration of Linux Device Mapper (DM) cryptographic functions.
 
-The ESSA is Linux based and when used in conjunction with the SAT will support:
+    - Included caam-keygen utility for key generation, dm-setup for CBC-AES encryption.
 
-- Hardware root of trust extended to the rootfs and software application layer Configuration of Linux Device Mapper (DM) cryptographic functions.
-- Use of AES-XTS and HMAC-SHA256 cryptographic algorithms.
-- Root of trust extended to Linux userspace.
+Modify the Recipe Append Files
+
+    Modify this bbappend file (recipes-core/images/core-image-minimal-initramfs.bbappend) to add/remove packages from initramfs.
+
 
 ## Supported boards
 
@@ -43,3 +43,20 @@ To know more about the [BG Networks ESSA](https://bgnet.works/bgn-essa) and its 
 
 To contribute to the development of this BSP and/or submit patches for new boards please feel free to [create pull requests](https://github.com/bgnetworks/meta-essa-mx6ul/pulls).
 
+**Note:** Initramfs is tested with iMX6SoloX SABRE
+
+## Build and test
+```
+MACHINE=imx6sxsabresd DISTRO=fsl-imx-xwayland source setup-essa.sh -b <BUILD_DIR>
+
+Run the following command to build initramfs image
+```
+bitbake core-image-minimal-initramfs-bgn
+```
+
+Note:
+Prepare the SD, by copying the wic image.
+Copy the u-boot into QSPI memory.
+After the build, copy the `core-image-minimal-initramfs.cpio.gz` file to boot partition (FAT) in SD card.
+Stop at u-boot console & give below command.
+"run initramfskernelboot"

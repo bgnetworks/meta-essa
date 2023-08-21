@@ -16,6 +16,7 @@ SRC_URI:append:imx6sxsabresd = " \
     ${@bb.utils.contains('ESSA_BOOT_MEDIUM', 'QSPI', 'file://0002-Enable-QSPI-boot-support.patch', '', d)} \
     file://0003-Enable-encrypted-boot-support.patch \
     file://0004-Add-fastboot-commands.patch \
+    file://0005-Setting-U-Boot-env-to-load-rootfs-from-initramfs-6sx.patch \
 "
 
 SRC_URI:append:iot-gate-imx8 = " \

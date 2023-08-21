@@ -1,0 +1,40 @@
+From d5315d76011d8de4c5b425fa8cfe6d59167aeda1 Mon Sep 17 00:00:00 2001
+From: saravanj24 <saravanan.j@jasmin-infotech.com>
+Date: Thu, 24 Aug 2023 14:20:16 +0530
+Subject: [PATCH] 0005-Setting-U-Boot-env-to-load-rootfs-from-initramfs-6sx
+
+---
+ include/configs/mx6sxsabresd.h | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/include/configs/mx6sxsabresd.h b/include/configs/mx6sxsabresd.h
+index a0cabe565e..ae4eccb4c7 100644
+--- a/include/configs/mx6sxsabresd.h
++++ b/include/configs/mx6sxsabresd.h
+@@ -80,10 +80,11 @@
+ 	"console=ttymxc0\0" \
+ 	"fdt_high=0xffffffff\0" \
+ 	"initrd_high=0xffffffff\0" \
+-	"fdt_file=undefined\0" \
++	"fdt_file=imx6sx-sdb.dtb\0" \
+ 	"fdt_addr=0x83000000\0" \
+ 	"tee_addr=0x84000000\0" \
+ 	"tee_file=uTee-6sxsdb\0" \
++	"initramfs_file=core-image-minimal-initramfs-imx6sxsabresd.cpio.gz\0" \
+ 	"boot_fdt=try\0" \
+ 	"ip_dyn=yes\0" \
+ 	"splashimage=0x8c000000\0" \
+@@ -100,6 +101,13 @@
+ 	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
+ 	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
+ 	"loadtee=fatload mmc ${mmcdev}:${mmcpart} ${tee_addr} ${tee_file}\0" \
++	"loadinitramfs=fatload mmc ${mmcdev}:${mmcpart} ${initrd_addr} ${initramfs_file}\0" \
++	"initramfskernelboot=echo Booting initramfs  . . .;" \
++                            "run mmcargs; " \
++			    "run loadimage; " \
++			    "run loadfdt; " \
++			    "run loadinitramfs; " \
++			    "bootz ${loadaddr} ${initrd_addr}:${filesize} ${fdt_addr};\0" \
+ 	"mmcboot=echo Booting from mmc ...; " \
+ 		"run mmcargs; " \
+ 		"if test ${tee} = yes; then " \
