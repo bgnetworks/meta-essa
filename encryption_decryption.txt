@@ -1,0 +1,45 @@
+steps
+------
+caam-keygen create enckey ecb -s 16
+
+cat /data/caam/enckey | keyctl padd logon enckey: @us
+
+dd if=/dev/zero of=/dev/mmcblk3p2 bs=1M count=32
+
+dmsetup -v create crypt_target --table "0 $(blockdev --getsz /dev/mmcblk3p2) crypt capi:tk(cbc(aes))-plain :36:logon:enckey: 0 /dev/mmcblk3p2 0 1 sector_size:512"
+
+mkfs.ext4 /dev/mapper/crypt_target
+
+mkdir -p /mnt/encblock
+
+mount -t ext4 /dev/mapper/crypt_target /mnt/encblock
+
+echo "This is a test of full disk encryption on i.MX" > /mnt/encblock/readme.txt
+
+umount /mnt/encblock
+
+mkdir /mnt/keys
+
+mount /dev/mmcblk3p1 /mnt/keys
+
+cp /data/caam/enckey.bb /mnt/keys
+
+rest the board
+---------------
+
+mkdir /mnt/keys
+
+mount /dev/mmcblk3p1 /mnt/keys
+
+caam-keygen import /mnt/keys/enckey.bb importKey
+
+cat /data/caam/importKey | keyctl padd logon logkey: @us
+
+dmsetup -v create crypt_target --table "0 $(blockdev --getsz /dev/mmcblk3p2) crypt capi:tk(cbc(aes))-plain :36:logon:logkey: 0 /dev/mmcblk3p2 0 1 sector_size:512"
+
+mkdir -p /mnt/encblock
+
+mount -t ext4 /dev/mapper/crypt_target /mnt/encblock
+
+cat /mnt/encblock/readme.txt
+
