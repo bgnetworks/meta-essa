@@ -48,15 +48,34 @@ To contribute to the development of this BSP and/or submit patches for new board
 ## Build and test
 ```
 MACHINE=imx6sxsabresd DISTRO=fsl-imx-xwayland source setup-essa.sh -b <BUILD_DIR>
+```
 
-Run the following command to build initramfs image
+Run the following command to build live initramfs image
+
 ```
 bitbake core-image-minimal-initramfs-bgn
 ```
 
+Run the following command to build mfg initramfs image
+```
+bitbake core-image-minimal-mfg-initramfs-bgn
+```
+
 Note:
+
+To test live initramfs image:
+
 Prepare the SD, by copying the wic image.
 Copy the u-boot into QSPI memory.
 After the build, copy the `core-image-minimal-initramfs.cpio.gz` file to boot partition (FAT) in SD card.
 Stop at u-boot console & give below command.
+"run initramfskernelboot"
+
+To test mfg initramfs image:
+
+Prepare the SD, by copying the wic image.
+Copy the u-boot into QSPI memory.
+After the build, copy the `core-image-minimal-mfg-initramfs.cpio.gz` file to boot partition (FAT) in SD card.
+Stop at u-boot console & give below command.
+"setenv initramfs_file core-image-minimal-mfg-initramfs-imx6sxsabresd.cpio.gz"
 "run initramfskernelboot"
