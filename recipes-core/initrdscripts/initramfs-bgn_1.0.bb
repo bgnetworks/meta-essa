@@ -3,14 +3,14 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 DEPENDS = "virtual/kernel"
 RDEPENDS_${PN} = "udev udev-extraconf"
-SRC_URI = "file://init-boot.sh"
+SRC_URI = "file://init-bgn-live-boot.sh"
 
-PR = "r12"
+PR = "r0"
 
 S = "${WORKDIR}"
 
 do_install() {
-        install -m 0755 ${WORKDIR}/init-boot.sh ${D}/init
+        install -m 0755 ${WORKDIR}/init-bgn-live-boot.sh ${D}/init
         install -d ${D}/dev
         mknod -m 622 ${D}/dev/console c 5 1
 }
