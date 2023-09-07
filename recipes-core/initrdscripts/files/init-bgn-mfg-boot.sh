@@ -48,7 +48,6 @@ for m in $MODULE_DIR/*; do
 	echo "Calling module ${module}"
 	eval "${module}_run"
 done
-echo "Encrypted RootFS Partition Completed"
 
-# Todo: need to find way to sign off mfg_initramfs; enabled dropping to shell for now;
-exec sh
+# Wait at the while loop after the encryption process executed
+fatal "Encryption process executed"

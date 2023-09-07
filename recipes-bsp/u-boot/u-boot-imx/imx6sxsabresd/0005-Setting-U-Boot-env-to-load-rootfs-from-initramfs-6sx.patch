@@ -1,36 +1,45 @@
-From 8343c8de22dd08eefd2738b4e3bd6afb98509810 Mon Sep 17 00:00:00 2001
+From 19888ceb16afa3b8264c35b54a8ebb6e584897d1 Mon Sep 17 00:00:00 2001
 From: saravanj24 <saravanan.j@jasmin-infotech.com>
 Date: Thu, 24 Aug 2023 14:20:16 +0530
 Subject: [PATCH] 0005-Setting-U-Boot-env-to-load-rootfs-from-initramfs-6sx
 
 ---
- include/configs/mx6sxsabresd.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ include/configs/mx6sxsabresd.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/include/configs/mx6sxsabresd.h b/include/configs/mx6sxsabresd.h
-index a0cabe565e..ff38d7ab5b 100644
+index a0cabe565e..ea34bb0f4b 100644
 --- a/include/configs/mx6sxsabresd.h
 +++ b/include/configs/mx6sxsabresd.h
-@@ -84,6 +84,7 @@
+@@ -84,6 +84,8 @@
  	"fdt_addr=0x83000000\0" \
  	"tee_addr=0x84000000\0" \
  	"tee_file=uTee-6sxsdb\0" \
-+	"initramfs_file=core-image-minimal-initramfs-imx6sxsabresd.cpio.gz\0" \
++	"live_initramfs_file=core-image-minimal-live-initramfs-imx6sxsabresd.cpio.gz\0" \
++	"mfg_initramfs_file=core-image-minimal-mfg-initramfs-imx6sxsabresd.cpio.gz\0" \
  	"boot_fdt=try\0" \
  	"ip_dyn=yes\0" \
  	"splashimage=0x8c000000\0" \
-@@ -100,6 +101,14 @@
+@@ -100,6 +102,22 @@
  	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
  	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
  	"loadtee=fatload mmc ${mmcdev}:${mmcpart} ${tee_addr} ${tee_file}\0" \
-+	"loadinitramfs=fatload mmc ${mmcdev}:${mmcpart} ${initrd_addr} ${initramfs_file}\0" \
-+	"initramfskernelboot=echo Booting initramfs  . . .;" \
++	"loadliveinitramfs=fatload mmc ${mmcdev}:${mmcpart} ${initrd_addr} ${live_initramfs_file}\0" \
++	"loadmfginitramfs=fatload mmc ${mmcdev}:${mmcpart} ${initrd_addr} ${mfg_initramfs_file}\0" \
++	"liveinitramfskernelboot=echo Booting live initramfs  . . .;" \
 +                            "setenv fdt_file imx6sx-sdb.dtb; " \
 +			    "run mmcargs; " \
 +			    "run loadimage; " \
 +			    "run loadfdt; " \
-+			    "run loadinitramfs; " \
++			    "run loadliveinitramfs; " \
 +			    "bootz ${loadaddr} ${initrd_addr}:${filesize} ${fdt_addr};\0" \
++         "mfginitramfskernelboot=echo Booting mfg initramfs  . . .;" \
++                            "setenv fdt_file imx6sx-sdb.dtb; " \
++                            "run mmcargs; " \
++                            "run loadimage; " \
++                            "run loadfdt; " \
++                            "run loadmfginitramfs; " \
++                            "bootz ${loadaddr} ${initrd_addr}:${filesize} ${fdt_addr};\0" \
  	"mmcboot=echo Booting from mmc ...; " \
  		"run mmcargs; " \
  		"if test ${tee} = yes; then " \
