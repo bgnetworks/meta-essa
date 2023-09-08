@@ -67,15 +67,14 @@ To test live initramfs image:
 
 Prepare the SD, by copying the wic image.
 Copy the u-boot into QSPI memory.
-After the build, copy the `core-image-minimal-initramfs.cpio.gz` file to boot partition (FAT) in SD card.
+After the build, copy the `core-image-minimal-live-initramfs-imx6sxsabresd.cpio.gz` file to boot partition (FAT) in SD card.
 Stop at u-boot console & give below command.
-"run initramfskernelboot"
+"run liveinitramfskernelboot"
 
 To test mfg initramfs image:
 
 Prepare the SD, by copying the wic image.
 Copy the u-boot into QSPI memory.
-After the build, copy the `core-image-minimal-mfg-initramfs.cpio.gz` file to boot partition (FAT) in SD card.
+After the build, copy the `core-image-minimal-mfg-initramfs-imx6sxsabresd.cpio.gz` file to boot partition (FAT) in SD card.
 Stop at u-boot console & give below command.
-"setenv initramfs_file core-image-minimal-mfg-initramfs-imx6sxsabresd.cpio.gz"
-"run initramfskernelboot"
+"run mfginitramfskernelboot"

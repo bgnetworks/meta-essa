@@ -21,6 +21,15 @@ udev_daemon() {
 
 _UDEV_DAEMON=`udev_daemon`
 
+fatal() {
+    echo $1 >/dev/console
+    echo >/dev/console
+
+    while [ "true" ]; do
+        sleep 3600
+    done
+}
+
 mkdir $ROOTFS_DIR
 mkdir -p /proc /sys /run /var/run
 mount -t proc proc /proc
