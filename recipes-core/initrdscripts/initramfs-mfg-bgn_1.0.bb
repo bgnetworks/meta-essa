@@ -7,6 +7,7 @@ SRC_URI = " \
 	file://init-bgn-mfg-boot.sh \
 	file://encrypt_rootfs.sh \
 	file://extract_rootfs.sh \
+        file://sign_keyblob.sh \
 "
 
 PR = "r0"
@@ -19,7 +20,8 @@ do_install() {
 	install -d ${D}/init.d
 
 	install -m 0755 ${WORKDIR}/encrypt_rootfs.sh ${D}/init.d/09-encrypt_rootfs
-	install -m 0755 ${WORKDIR}/extract_rootfs.sh ${D}/init.d/10-extract_rootfs
+	install -m 0755 ${WORKDIR}/sign_keyblob.sh ${D}/init.d/10-sign_keyblob
+	install -m 0755 ${WORKDIR}/extract_rootfs.sh ${D}/init.d/11-extract_rootfs
 
 	install -d ${D}/dev
         mknod -m 622 ${D}/dev/console c 5 1
@@ -29,7 +31,8 @@ RRECOMMENDS:${PN}-base += "initramfs-module-lvm"
 
 FILES:${PN} += "/init /dev \
 		/init.d/09-encrypt_rootfs \
-		/init.d/10-extract_rootfs \
+		/init.d/10-sign_keyblob \
+                /init.d/11-extract_rootfs \
 "
 
 # Due to kernel dependency
