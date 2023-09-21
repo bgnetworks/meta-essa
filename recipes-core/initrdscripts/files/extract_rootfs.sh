@@ -17,8 +17,6 @@ extract_rootfs_run() {
 	# Mount the FAT partition for copying the key blob file
 	mount /dev/mmcblk3p1 /mnt
 	
-	# Copying the key blob file to the FAT partition
-	cp /data/caam/enckey.bb /mnt/enckey.bb && echo "Took a backup of key blob"
  
         # Extract the rootfs tar file to the mount point
 	if [ ! -e /mnt/core-image-minimal-imx6sxsabresd.tar.bz2 ]; then

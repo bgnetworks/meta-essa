@@ -9,7 +9,7 @@ INITRAMFS_SCRIPTS ?= "\
 
 PACKAGE_INSTALL = "${INITRAMFS_SCRIPTS} ${VIRTUAL-RUNTIME_base-utils} udev base-passwd ${ROOTFS_BOOTSTRAP_INSTALL} \
 		   libgcc udev lvm2 e2fsprogs-mke2fs coreutils keyutils util-linux cryptodev-module cryptsetup \
-		   caam-keygen lrzsz \
+		   caam-keygen lrzsz openssl-bin \
 		  "
 
 # Do not pollute the initrd image with rootfs features

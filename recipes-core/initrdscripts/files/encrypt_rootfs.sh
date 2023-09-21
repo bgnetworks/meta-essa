@@ -20,6 +20,8 @@ encrypt_rootfs_run() {
 	# Creating a encryption key using the caam-keygen
 	caam-keygen create enckey ecb -s 16
 
+        # ToDo Send the keyblob to the host pc 
+
 	if [ ! -e /data/caam/enckey ] || [ ! -e /data/caam/enckey.bb ]; then
 
 	       fatal "Failed to create key and key blob"
