@@ -15,6 +15,11 @@ SRC_URI:append = " \
     file://0003-cryptographic-API-functions.cfg \
 "
 
+SRC_URI:append:imx8mmevk = " \
+    file://0004-added_spi_tpm_device_tree_cfg.patch \
+    file://0005-enable_tpm_cfg.cfg \
+"
+
 SRC_URI:append:imx6sxsabresd = " \
     file://0001-Fix-CAAM-RNG.patch \
 "
