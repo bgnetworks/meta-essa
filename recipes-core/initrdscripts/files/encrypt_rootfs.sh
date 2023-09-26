@@ -2,7 +2,7 @@
 
 encrypt_rootfs_enabled() {
 
-	mount /dev/mmcblk3p2 $ROOTFS_DIR
+	mount -o rw /dev/mmcblk3p2 $ROOTFS_DIR
 
 	if ! mountpoint -q $ROOTFS_DIR; then
 	   

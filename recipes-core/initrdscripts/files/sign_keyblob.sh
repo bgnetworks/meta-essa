@@ -27,14 +27,15 @@ sign_keyblob_run(){
    signature_location=$((blob_size + header_size))
    signature_offest=$(printf "%02x" "$signature_location" | xxd -r -p)
    signature_size=$(stat -c %s /keyblob.sign)
-   signature_length=$(printf "%02x" "$signature_size" | xxd -r -p)
+   signature_length=$(printf "%04X" $signature_size)
+
    
    # Appending the header information  
    echo -e -n "$magic_word" > signedkeyblob.bin
    echo -e -n "\x00$blob_offest" >> signedkeyblob.bin 
    echo -e -n "\x00$blob_length" >> signedkeyblob.bin
    echo -e -n "\x00$signature_offest" >> signedkeyblob.bin
-   echo -e -n "$signature_length" >> signedkeyblob.bin
+   echo -e -n "\x${signature_length:0:2}\x${signature_length:2:2}" >> signedkeyblob.bin
 
    # Append the black key blob 
    cat /data/caam/enckey.bb >> signedkeyblob.bin
