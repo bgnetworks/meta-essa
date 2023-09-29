@@ -75,6 +75,8 @@ Build the core image:
 
 ```bash
 bitbake core-image-base
+bitbake security-tpm-image
+bitbake security-tpm2-image
 ```
 
 **Note**: _The initial image build might take a few hours_

@@ -1,0 +1,76 @@
+From c5b61ba98b1ed5c9f544f5dad51433a2ffbdbbf0 Mon Sep 17 00:00:00 2001
+From: svsprasad96 <sivaprasad.sv@jasmin-infotech.com>
+Date: Wed, 27 Sep 2023 17:59:47 +0530
+Subject: [PATCH] added_tpm_pcr_cmds
+
+---
+ arch/arm/mach-imx/hab.c      | 18 ++++++++++++++++++
+ include/configs/imx8mm_evk.h | 10 ++++++++++
+ 2 files changed, 28 insertions(+)
+
+diff --git a/arch/arm/mach-imx/hab.c b/arch/arm/mach-imx/hab.c
+index 27c87f0cd1..53f102bc05 100644
+--- a/arch/arm/mach-imx/hab.c
++++ b/arch/arm/mach-imx/hab.c
+@@ -680,6 +680,18 @@ error:
+ 	return ret;
+ }
+ 
++static int do_sec_state(struct cmd_tbl *cmdtp, int flag, int argc,
++						char *const argv[])
++{
++	if (imx_hab_is_enabled())
++	{
++		// HAB closed
++		return CMD_RET_SUCCESS;
++	}
++
++	return CMD_RET_FAILURE;
++}
++
+ #ifdef CONFIG_MX7ULP
+ U_BOOT_CMD(
+ 		hab_status, CONFIG_SYS_MAXARGS, 2, do_hab_status,
+@@ -726,6 +738,12 @@ U_BOOT_CMD(
+ 		""
+ 	  );
+ 
++U_BOOT_CMD(
++		is_sec_state, 1, 0, do_sec_state,
++		"return 0 if SEC_CONFIG fuse is closed otherwise 1",
++		""
++	  );
++
+ #endif /* !defined(CONFIG_SPL_BUILD) */
+ 
+ /* Get CSF Header length */
+diff --git a/include/configs/imx8mm_evk.h b/include/configs/imx8mm_evk.h
+index 257ac79a1e..dafeb16f1c 100644
+--- a/include/configs/imx8mm_evk.h
++++ b/include/configs/imx8mm_evk.h
+@@ -145,8 +145,10 @@
+ 		"source\0" \
+ 	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
+ 	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr_r} ${fdtfile}\0" \
++	"pcr_hash=6dcd4ce188e63c6c1e43f2de23909e00f1b9142b0c4e449f8a87e1db41e90ab78\0" \
+ 	"mmcboot=echo Booting from mmc ...; " \
+ 		"run mmcargs; " \
++		"run do_pcr_extend; " \
+ 		"if test ${boot_fit} = yes || test ${boot_fit} = try; then " \
+ 			"bootm ${loadaddr}; " \
+ 		"else " \
+@@ -176,6 +178,14 @@
+ 				"echo WARN: Cannot load the DT; " \
+ 			"fi; " \
+ 		"fi;\0" \
++	"do_pcr_extend=echo Verify board_status; " \
++		"if is_sec_state; then " \
++			"tpm2 init; " \
++			"tpm2 startup TPM2_SU_CLEAR; " \
++			"tpm2 pcr_extend 16 ${pcr_hash}; " \
++		"else " \
++			"echo Open board..skipping TPM pcr extend...; " \
++		"fi;\0" \
+ 	"bsp_bootcmd=echo Running BSP bootcmd ...; " \
+ 		"mmc dev ${mmcdev}; if mmc rescan; then " \
+ 		   "if run loadbootscript; then " \

@@ -23,6 +23,39 @@ The ESSA is Linux based and when used in conjunction with the SAT will support:
 - Use of AES-XTS and HMAC-SHA256 cryptographic algorithms.
 - Root of trust extended to Linux userspace.
 
+
+## Meta-essa TPM changes includes:
+- meta-tpm layer -> has tpm stack 
+- u-boot changes for spi, tpm configurations for tpm infineon slb970  hardware
+- kernel changes for spi, tpm configurations for tpm infineon slb970  hardware
+				
+Meta-tpm layer contains:
+- tpm , tpm2 stack
+- version:5.5 \
+ git_link: https://gitlab.com/akuster/meta-security/-/blob/mickledore/meta-tpm/conf/layer.conf?ref_type=heads
+- meta-tpm-cfg spi configuration 
+
+## Build Steps:
+Modify bblayers.conf in build directory to include this layer while building.
+Ex: in bblayers.conf add this line at last.
+
+ BBLAYERS += " ${BSPDIR}/sources/meta-essa" \
+ BBLAYERS += " ${BSPDIR}/sources/meta-essa/meta-tpm"
+
+To Build tpm or tpm2 image:
+- bitbake security-tpm-image
+- bitbake security-tpm2-image
+
+### To test: 
+Flash this image from output directory -> security-tpm2-image-imx8mmevk.rootfs.wic
+Note: U-boot was not part of wic image.
+
+Note:
+         We were observing below error while building security-tpm-image. \
+ERROR: packagegroup-security-tpm2-1.0-r0 do_package_write_deb: An allarch packagegroup shouldn't depend on packages which are dynamically renamed (libtss2-tcti-device to libtss2-tcti-device0)
+ERROR: packagegroup-security-tpm2-1.0-r0 do_package_write_deb: An allarch packagegroup shouldn't depend on packages which are dynamically renamed (libtss2-tcti-mssim to libtss2-tcti-mssim0)
+It doesnt affect creating images.
+
 ## Supported boards
 
 The following boards are supported natively by this layer:

@@ -5,6 +5,7 @@ SRC_URI:append:imx8mmevk = " \
     file://0002-Add-fastboot-commands.patch \
     file://0003-added_tpm_spi_support.patch \
     file://0004-added_tpm_spi_device_tree_cfg.patch \
+    file://0005-added_tpm_pcr_cmds.patch \
 "
 
 SRC_URI:append:imx6ulevk = " \
