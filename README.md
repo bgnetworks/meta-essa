@@ -13,23 +13,17 @@ Yocto Layer for Creating Customized InitramFS for RootFS Encryption/Decryption:
 
 This layer provides information about customized Yocto layer for initramfs to encrypt & decrypt rootFS. Layer has support to boot initramfs at uboot.
 Included Packages
-
-    - Hardware root of trust extended to the initramfs and software application layer Configuration of Linux Device Mapper (DM) cryptographic functions.
-
-    - Included caam-keygen utility for key generation, dm-setup for CBC-AES encryption.
+ - Hardware root of trust extended to the initramfs and software application layer Configuration of Linux Device Mapper (DM) cryptographic functions.
+ - Included caam-keygen utility for key generation, dm-setup for CBC-AES encryption.
 
 Modify the Recipe Append Files
-
-    Modify this bbappend file (recipes-core/images/core-image-minimal-initramfs.bbappend) to add/remove packages from initramfs.
-
+ - Modify this bbappend file (recipes-core/images/core-image-minimal-initramfs.bbappend) to add/remove packages from initramfs.
 
 ## Supported boards
 
 The following boards are supported natively by this layer:
 
-- NXP i.<d/>MX 8M Mini EVK (imx8mmevk) - [8MMINILPD4-EVK](https://www.nxp.com/part/8MMINILPD4-EVK#/)
 - NXP's i.<d/>MX 6 SoloX SABRE (imx6sxsabresd) - [i.MX 6 SoloX SABRE](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/sabre-board-for-smart-devices-based-on-the-i-mx-6solox-applications-processors:RD-IMX6SX-SABRE)
-- NXP's i.<d/>MX 6 UltraLite Evaluation Kit (imx6ulevk) - [i.MX 6 UltraLite EVK](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/i-mx6ultralite-evaluation-kit:MCIMX6UL-EVK)
 
 ## Quick Start Guide
 
@@ -60,6 +54,11 @@ Run the following command to build mfg initramfs image
 ```
 bitbake core-image-minimal-mfg-initramfs-bgn
 ```
+Run the following command to build production initramfs image
+```
+bitbake core-image-minimal-prod-initramfs-bgn
+```
+
 
 Note:
 
@@ -69,7 +68,9 @@ Prepare the SD, by copying the wic image.
 Copy the u-boot into QSPI memory.
 After the build, copy the `core-image-minimal-live-initramfs-imx6sxsabresd.cpio.gz` file to boot partition (FAT) in SD card.
 Stop at u-boot console & give below command.
-"run liveinitramfskernelboot"
+```
+run liveinitramfskernelboot
+```
 
 To test mfg initramfs image:
 
@@ -77,4 +78,16 @@ Prepare the SD, by copying the wic image.
 Copy the u-boot into QSPI memory.
 After the build, copy the `core-image-minimal-mfg-initramfs-imx6sxsabresd.cpio.gz` file to boot partition (FAT) in SD card.
 Stop at u-boot console & give below command.
-"run mfginitramfskernelboot"
+```
+run mfginitramfskernelboot
+```
+To test production initramfs image:
+
+After the build, copy the `core-image-minimal-prod-initramfs-imx6sxsabresd.cpio.gz` file to boot partition (FAT) in SD card.
+Generate the RSA key pair with length of 4096 and copy the private and public key file to boot partition (FAT) in SD card.
+Stop at u-boot console & give below command.
+```
+setenv mmcargs setenv bootargs console=${console},${baudrate} root=${mmcroot} hash=ea9db9cb2911f635e4678820e7a521e1d47689c9f8e65118a1466b508d44d68a
+run prodinitramfskernelboot
+```
+
