@@ -17,10 +17,11 @@ SRC_URI:append:imx6sxsabresd = " \
     file://0003-Enable-encrypted-boot-support.patch \
     file://0004-Add-fastboot-commands.patch \
     file://0005-Setting-U-Boot-env-to-load-rootfs-from-initramfs-6sx.patch \
+    file://0006-Added-u-boot-command-for-variable-append.patch \
 "
 
-SRC_URI:append:iot-gate-imx8 = " \
-    file://0001-Add-SDP-support.patch \
-    file://0002-Enable-HAB-features.patch \
-    file://0003-Add-fastboot-commands.patch \
-"
+#SRC_URI:append:iot-gate-imx8 = " \
+#    file://0001-Add-SDP-support.patch \
+#    file://0002-Enable-HAB-features.patch \
+#    file://0003-Add-fastboot-commands.patch \
+#"

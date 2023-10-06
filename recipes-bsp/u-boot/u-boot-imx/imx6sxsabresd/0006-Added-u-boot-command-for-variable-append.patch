@@ -1,0 +1,131 @@
+From 91db85dabdae17e30176005d98e24e795d2ac11b Mon Sep 17 00:00:00 2001
+From: sathishkumar-rk <sathishkumar.k@jasmin-infotech.com>
+Date: Fri, 6 Oct 2023 17:38:42 +0530
+Subject: [PATCH] Added u-boot command for variable append
+
+---
+ cmd/Kconfig                          |  7 +++
+ cmd/Makefile                         |  1 +
+ cmd/mem_misc.c                       | 73 ++++++++++++++++++++++++++++
+ configs/mx6sxsabresd_optee_defconfig |  1 +
+ 4 files changed, 82 insertions(+)
+ create mode 100644 cmd/mem_misc.c
+
+diff --git a/cmd/Kconfig b/cmd/Kconfig
+index f6bd71451b..3ce0bc5b2a 100644
+--- a/cmd/Kconfig
++++ b/cmd/Kconfig
+@@ -680,6 +680,13 @@ config CMD_MEMORY
+ 	    base - print or set address offset
+ 	    loop - initialize loop on address range
+ 
++config CMD_APPEND_VAR
++	bool "setvar"
++	help
++		Read the memory by given size and convert value as hex string
++		format and set to bootargs/kernel args variable for user space
++		access
++
+ config CMD_MEM_SEARCH
+ 	bool "ms - Memory search"
+ 	help
+diff --git a/cmd/Makefile b/cmd/Makefile
+index 166c652d98..6d97b08784 100644
+--- a/cmd/Makefile
++++ b/cmd/Makefile
+@@ -92,6 +92,7 @@ obj-$(CONFIG_CMD_LSBLK) += lsblk.o
+ obj-$(CONFIG_ID_EEPROM) += mac.o
+ obj-$(CONFIG_CMD_MD5SUM) += md5sum.o
+ obj-$(CONFIG_CMD_MEMORY) += mem.o
++obj-$(CONFIG_CMD_APPEND_VAR) += mem_misc.o
+ obj-$(CONFIG_CMD_IO) += io.o
+ obj-$(CONFIG_CMD_MFSL) += mfsl.o
+ obj-$(CONFIG_CMD_MII) += mii.o
+diff --git a/cmd/mem_misc.c b/cmd/mem_misc.c
+new file mode 100644
+index 0000000000..aca28bf580
+--- /dev/null
++++ b/cmd/mem_misc.c
+@@ -0,0 +1,73 @@
++#include <common.h>
++#include <console.h>
++#include <bootretry.h>
++#include <cli.h>
++#include <command.h>
++#include <console.h>
++#include <flash.h>
++#include <hash.h>
++#include <log.h>
++#include <mapmem.h>
++#include <rand.h>
++#include <watchdog.h>
++#include <asm/global_data.h>
++#include <asm/io.h>
++#include <linux/bitops.h>
++#include <linux/compiler.h>
++#include <linux/ctype.h>
++#include <linux/delay.h>
++
++static int do_mem_misc_setvar(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
++{
++	ulong addr;
++	ulong size;
++	int i;
++	uchar data[32];
++	char hex_data[80];
++
++	if (argc != 4)
++	{
++		printf("Usage: %s <variable> <address> <size>\n", argv[0]);
++		return CMD_RET_USAGE;
++	}
++
++	char *var_name = argv[1];
++	addr = simple_strtoul(argv[2], NULL, 16);
++	size = simple_strtoul(argv[3], NULL, 16);
++
++	if (size <= 0 || size > 32)
++	{
++		printf("Invalid size (must be between 1 and 32 bytes)\n");
++		return CMD_RET_FAILURE;
++	}
++
++	if (env_set(var_name, NULL) != 0)
++	{
++		printf("Failed to clear environment variable\n");
++		return CMD_RET_FAILURE;
++	}
++
++	// Read & copy data from memory
++	for (i = 0; i < size; i++)
++	{
++		data[i] = *(uchar *)(addr + i);
++	}
++
++	// Convert binary to hexadecimal string
++	for (i = 0; i < size; i++) {
++	    snprintf(hex_data + i * 2, sizeof(hex_data) - i * 2, "%02x", data[i]);
++	}
++
++	if (env_set(var_name,hex_data ) != 0)
++	{
++		printf("Failed to set environment variable\n");
++		return CMD_RET_FAILURE;
++	}
++	return CMD_RET_SUCCESS;
++}
++
++/**************************************************/
++U_BOOT_CMD(
++	setvar, 4, 1, do_mem_misc_setvar,
++	"Read memory content and store it in an environment variable passed",
++	"<variable> <address> <size>");
+diff --git a/configs/mx6sxsabresd_optee_defconfig b/configs/mx6sxsabresd_optee_defconfig
+index 76317a4f9d..f07220ad3b 100644
+--- a/configs/mx6sxsabresd_optee_defconfig
++++ b/configs/mx6sxsabresd_optee_defconfig
+@@ -122,3 +122,4 @@ CONFIG_IMX_HAB=y
+ CONFIG_FAT_WRITE=y
+ CONFIG_CMD_DEKBLOB=y
+ CONFIG_CMD_PRIBLOB=n
++CONFIG_CMD_APPEND_VAR=y
