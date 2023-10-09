@@ -18,6 +18,7 @@ SRC_URI:append:imx6sxsabresd = " \
     file://0004-Add-fastboot-commands.patch \
     file://0005-Setting-U-Boot-env-to-load-rootfs-from-initramfs-6sx.patch \
     file://0006-Added-u-boot-command-for-variable-append.patch \
+    file://0007-Add-steps-to-extract-hash-from-kernel-args.patch \
 "
 
 #SRC_URI:append:iot-gate-imx8 = " \
