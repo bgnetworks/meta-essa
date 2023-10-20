@@ -1,0 +1,107 @@
+From 726470015b00d78d3367939c58d01f9bb7d31a88 Mon Sep 17 00:00:00 2001
+From: sathishkumar-rk <sathishkumar.k@jasmin-infotech.com>
+Date: Fri, 20 Oct 2023 14:15:14 +0530
+Subject: [PATCH] Add HAB auth step for key and init ramfs file
+
+---
+ arch/arm/mach-imx/hab.c        | 18 +++++++++++
+ include/configs/mx6sxsabresd.h | 56 +++++++++++++++++++++-------------
+ 2 files changed, 53 insertions(+), 21 deletions(-)
+
+diff --git a/arch/arm/mach-imx/hab.c b/arch/arm/mach-imx/hab.c
+index 27c87f0cd1..0245baff61 100644
+--- a/arch/arm/mach-imx/hab.c
++++ b/arch/arm/mach-imx/hab.c
+@@ -680,6 +680,24 @@ error:
+ 	return ret;
+ }
+ 
++static int do_sec_state(struct cmd_tbl *cmdtp, int flag, int argc,
++						char *const argv[])
++{
++	if (imx_hab_is_enabled())
++	{
++		// HAB closed
++		return CMD_RET_SUCCESS;
++	}
++
++	return CMD_RET_FAILURE;
++}
++
++U_BOOT_CMD(
++		is_sec_state, 1, 0, do_sec_state,
++		"return 0 if SEC_CONFIG fuse is closed otherwise 1",
++		""
++	 );
++
+ #ifdef CONFIG_MX7ULP
+ U_BOOT_CMD(
+ 		hab_status, CONFIG_SYS_MAXARGS, 2, do_hab_status,
+diff --git a/include/configs/mx6sxsabresd.h b/include/configs/mx6sxsabresd.h
+index 430f11137d..485158b43e 100644
+--- a/include/configs/mx6sxsabresd.h
++++ b/include/configs/mx6sxsabresd.h
+@@ -110,28 +110,42 @@
+ 	"loadprodinitramfs=fatload mmc ${mmcdev}:${mmcpart} ${initrd_addr} ${prod_initramfs_file}\0" \
+ 	"loadpublickeyhash=fatload mmc ${mmcdev}:${mmcpart} ${hash_addr} ${public_key_hash_file}\0" \
+ 	"liveinitramfskernelboot=echo Booting live initramfs  . . .;" \
+-                           "setenv fdt_file imx6sx-sdb.dtb; " \
+-			    "run mmcargs; " \
+-			    "run loadimage; " \
+-			    "run loadfdt; " \
+-			    "run loadliveinitramfs; " \
+-			    "bootz ${loadaddr} ${initrd_addr}:${filesize} ${fdt_addr};\0" \
+-         "mfginitramfskernelboot=echo Booting mfg initramfs  . . .;" \
+-                            "setenv fdt_file imx6sx-sdb.dtb; " \
+-                            "run mmcargs; " \
+-                            "run loadimage; " \
+-                            "run loadfdt; " \
+-                            "run loadmfginitramfs; " \
+-                            "bootz ${loadaddr} ${initrd_addr}:${filesize} ${fdt_addr};\0" \
++		"setenv fdt_file imx6sx-sdb.dtb; " \
++		"run mmcargs; " \
++		"run loadimage; " \
++		"run loadfdt; " \
++		"run loadliveinitramfs; " \
++		"bootz ${loadaddr} ${initrd_addr}:${filesize} ${fdt_addr};\0" \
++	"mfginitramfskernelboot=echo Booting mfg initramfs  . . .;" \
++		"setenv fdt_file imx6sx-sdb.dtb; " \
++		"run mmcargs; " \
++		"run loadimage; " \
++		"run loadfdt; " \
++		"run loadmfginitramfs; " \
++		"bootz ${loadaddr} ${initrd_addr}:${filesize} ${fdt_addr};\0" \
+ 	"prodinitramfskernelboot=echo Booting production initramfs  . . .;" \
+-                            "setenv fdt_file imx6sx-sdb.dtb; " \
+-			    "run loadpublickeyhash;" \
+-			    "setvar hash ${hash_addr} 20;" \
+-                            "run mmcargs; " \
+-                            "run loadimage; " \
+-                            "run loadfdt; " \
+-                            "run loadprodinitramfs; " \
+-                            "bootz ${loadaddr} ${initrd_addr}:${filesize} ${fdt_addr};\0" \
++		"setenv fdt_file imx6sx-sdb.dtb; " \
++		"run loadpublickeyhash;" \
++		"if is_sec_state; then " \
++			"echo \"Secure board - HAB authenticate key file \"; " \
++			"hab_auth_img_or_fail ${hash_addr} ${filesize} 1000 ;" \
++		"else " \
++			"echo \"Open board - HAB authenticate key file \"; " \
++                        "hab_auth_img ${hash_addr} ${filesize} 1000 ;" \
++		"fi;" \
++		"setvar hash ${hash_addr} 20;" \
++		"run mmcargs; " \
++		"run loadimage; " \
++		"run loadfdt; " \
++		"run loadprodinitramfs; " \
++		"if is_sec_state; then " \
++			"echo \"Secure board - HAB authenticate init ramfs file \"; " \
++			"hab_auth_img_or_fail ${initrd_addr} ${filesize} 16A6000; " \
++		"else " \
++			"echo \"Open board - HAB authenticate init ramfs file \"; " \
++			"hab_auth_img ${initrd_addr} ${filesize} 16A6000; " \
++		"fi;" \
++		"bootz ${loadaddr} ${initrd_addr}:${filesize} ${fdt_addr};\0" \
+ 	"mmcboot=echo Booting from mmc ...; " \
+ 		"run mmcargs; " \
+ 		"if test ${tee} = yes; then " \
