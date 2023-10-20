@@ -1,0 +1,29 @@
+From 3b2e9f017178f7017f29bf970b47fd4a7c9ebc10 Mon Sep 17 00:00:00 2001
+From: svsprasad96 <sivaprasad.sv@jasmin-infotech.com>
+Date: Mon, 25 Sep 2023 18:23:19 +0530
+Subject: [PATCH] added_tpm_spi_device_tree_cfg
+
+---
+ arch/arm/dts/imx8mm-evk.dtsi | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/dts/imx8mm-evk.dtsi b/arch/arm/dts/imx8mm-evk.dtsi
+index 9d8f07cfa9..27439d5062 100644
+--- a/arch/arm/dts/imx8mm-evk.dtsi
++++ b/arch/arm/dts/imx8mm-evk.dtsi
+@@ -135,10 +135,12 @@
+ 	cs-gpios = <&gpio5 13 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ 
+-	spidev0: spi@0 {
++	tpm0: slb9670@0 {
++		compatible = "tcg,tpm_tis-spi";
++		spi-max-frequency = <10000000>;
+ 		reg = <0>;
+-		compatible = "rohm,dh2228fv";
+-		spi-max-frequency = <500000>;
++		status = "okay";
++
+ 	};
+ };
+ 

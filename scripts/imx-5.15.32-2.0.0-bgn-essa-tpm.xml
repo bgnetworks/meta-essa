@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+
+    <include name="imx-5.15.32-2.0.0.xml" />
+
+    <remote fetch="https://github.com/bgnetworks" name="bgn" />
+
+    <project name="meta-essa" remote="bgn" revision="kirkstone" path="sources/meta-essa">
+        <linkfile src="scripts/setup-essa.sh" dest="setup-essa.sh" />
+    </project>
+
+    <!-- Define a new remote for meta-security -->
+    <remote fetch="https://git.yoctoproject.org/git" name="meta-security"/>
+    <!-- Add meta-tpm layer from the new remote -->
+    <project name="meta-security" remote="meta-security" revision="mickledore" path="sources/meta-security">
+    </project>
+
+</manifest>

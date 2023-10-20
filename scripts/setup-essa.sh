@@ -25,6 +25,10 @@ echo "" >>conf/bblayers.conf
 echo "# ESSA integration layer" >>conf/bblayers.conf
 echo "BBLAYERS += \" \${BSPDIR}/sources/meta-essa\"" >>conf/bblayers.conf
 
+echo "" >>conf/bblayers.conf
+echo "# TPM integration layer" >>conf/bblayers.conf
+echo 'BBLAYERS += "${@bb.utils.contains("TPM_ENABLE", "1", "${BSPDIR}/sources/meta-security/meta-tpm", "", d)}"' >> conf/bblayers.conf
+
 cat ${ESSA_DIR}/templates/${LOCAL_CONF_APPEND} >>conf/local.conf
 
 echo ""
