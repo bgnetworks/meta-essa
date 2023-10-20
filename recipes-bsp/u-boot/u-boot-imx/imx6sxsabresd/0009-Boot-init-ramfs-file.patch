@@ -1,0 +1,22 @@
+From 2c9f59627fca072ebfd10637501319bb215116b0 Mon Sep 17 00:00:00 2001
+From: sathishkumar-rk <sathishkumar.k@jasmin-infotech.com>
+Date: Fri, 20 Oct 2023 16:08:37 +0530
+Subject: [PATCH] Boot init ramfs file
+
+---
+ configs/mx6sxsabresd_optee_defconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configs/mx6sxsabresd_optee_defconfig b/configs/mx6sxsabresd_optee_defconfig
+index f07220ad3b..f80733f722 100644
+--- a/configs/mx6sxsabresd_optee_defconfig
++++ b/configs/mx6sxsabresd_optee_defconfig
+@@ -14,7 +14,7 @@ CONFIG_DEFAULT_DEVICE_TREE="imx6sx-sdb"
+ CONFIG_NXP_BOARD_REVISION=y
+ CONFIG_SUPPORT_RAW_INITRD=y
+ CONFIG_USE_BOOTCOMMAND=y
+-CONFIG_BOOTCOMMAND="run findfdt; mmc dev ${mmcdev}; if mmc rescan; then if run loadbootscript; then run bootscript; else if run loadimage; then run mmcboot; else run netboot; fi; fi; else run netboot; fi"
++CONFIG_BOOTCOMMAND="run findfdt; mmc dev ${mmcdev}; if mmc rescan; then if run loadbootscript; then run bootscript; else if run loadimage; then run prodinitramfskernelboot; else run netboot; fi; fi; else run netboot; fi"
+ CONFIG_BOOTDELAY=3
+ CONFIG_IMX_OPTEE=y
+ # CONFIG_CONSOLE_MUX is not set

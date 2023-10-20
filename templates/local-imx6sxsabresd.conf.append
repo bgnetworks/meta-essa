@@ -76,6 +76,10 @@ IMAGE_FSTYPES:append = " wic"
 # Uncomment the following line to set the boot medium as QSPI
 # ESSA_BOOT_MEDIUM = "QSPI"
 
+# rootfs encryption
+# Uncomment the following line to run production initramfs
+# ESSA_ROOTFS_ENCRYPTION = "ENABLE"
+
 # Setting the root password as toor
 # Disable debug-tweaks before enable this
 # INHERIT += "extrausers"
