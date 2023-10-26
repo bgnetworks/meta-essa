@@ -31,5 +31,7 @@ extract_rootfs_run() {
         # Unmount the mount directories
 	umount /mnt
 	umount $ROOTFS_DIR
+	
+	echo "Encryption process completed... reboot to device" 
 }
 

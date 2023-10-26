@@ -20,7 +20,8 @@ SRC_URI:append:imx6sxsabresd = " \
     file://0006-Added-u-boot-command-for-variable-append.patch \
     file://0007-Add-steps-to-extract-hash-from-kernel-args.patch \
     file://0008-Add-HAB-auth-step-for-key-and-init-ramfs-file.patch \
-    ${@bb.utils.contains('ESSA_ROOTFS_ENCRYPTION', 'ENABLE', 'file://0009-Boot-init-ramfs-file.patch', '', d)} \
+    ${@bb.utils.contains('ESSA_ROOTFS_ENCRYPTION', '1', 'file://0009-Boot-init-ramfs-file.patch', '', d)} \
+    file://0010-Modify-setvar-command.patch \
 "
 
 #SRC_URI:append:iot-gate-imx8 = " \

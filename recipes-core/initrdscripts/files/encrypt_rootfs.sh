@@ -7,11 +7,10 @@ encrypt_rootfs_enabled() {
 	if ! mountpoint -q $ROOTFS_DIR; then
 	   
            fatal "RootFS is already encrypted"
-			
-       fi
-
-       umount $ROOTFS_DIR
-       return 0
+        fi
+        
+        umount $ROOTFS_DIR
+        return 0
 
 }
 

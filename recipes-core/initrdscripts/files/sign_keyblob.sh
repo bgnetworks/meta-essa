@@ -14,6 +14,12 @@ sign_keyblob_enabled(){
 sign_keyblob_run(){
 
    mount /dev/mmcblk3p1 /mnt
+   
+   # Check key is exist in the mnt point
+   if [ ! -e /mnt/enckey_signing_private_key.pem ]; then
+   	fatal "Encryption key not available"
+   fi
+   
    # Signing the black key blob with the private key(consider the private key in FAT partition)
    openssl dgst -sha256 -sign /mnt/enckey_signing_private_key.pem -out keyblob.sign /data/caam/enckey.bb 
 
@@ -43,8 +49,11 @@ sign_keyblob_run(){
    # Append the black key blob signature
    cat keyblob.sign >> signedkeyblob.bin 
    
-   #copy the signed black key blob to the FAT partition
+   # copy the signed black key blob to the FAT partition
    cp signedkeyblob.bin /mnt
+   
+   # Extract public key from private key pair
+   openssl rsa -in /mnt/enckey_signing_private_key.pem -pubout -out /mnt/enckey_signing_public_key.pem
    
    #Remove the private key used for signing the key blob 
    rm -rf /mnt/enckey_signing_private_key.pem
