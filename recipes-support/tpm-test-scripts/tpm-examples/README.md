@@ -3,11 +3,11 @@ This folder contains a collection of shell scripts for working with the Trusted 
 
 ## Scripts
 
-`tpm_err_aes_nvread.sh` 
+`tpm_error_aes_nvread.sh` 
 
 This Bash script demonstrates an intentional error scenario involving TPM (Trusted Platform Module) NV (Non-Volatile) Index operations. It showcases how providing an incorrect PCR (Platform Configuration Register) index value can result in an error during TPM NV read.
 
-`tpm_err_aes_nvwrite.sh` 
+`tpm_error_aes_nvwrite.sh` 
 This script intentionally attempts to overwrite an AES-256 key stored in a TPM2 NV (Non-Volatile) index with an incorrect PCR policy. The script demonstrates the following steps:
 
 1. Defines the PCR index, NV index, and the output file for the AES-256 key.
@@ -20,53 +20,81 @@ This script intentionally attempts to overwrite an AES-256 key stored in a TPM2 
 
 `tpm_policy_creation.sh`
 
-This script shows how to create policies and define nv indexes for key storage.
-The script performs the following steps:
+This script shows how to create policy and also check the measured boot condition. The script performs the following steps:
 
-1.Verifying the existence of the file to be checked, pcr_extend.dat, in the script directory.If not, it will create(used for measured boot)
-2. Verifying whether the script directory contains the pcr16.dat (pcr output file) or not.
-3. Checking whether the pcr is extended or not. If extended it will proceed further otherwise the process should terminated.
-4.If the pcr_extend.dat and pcr16.dat files match, the measured boot passes, and the operation can continue.
-5. PCR Policy gets satisfied by comparing the current state value with the passed-in value; this is done by TPM internally.
-6. Creates a policy based on the satisfied PCR policy for pcr16.dat
-7. Defines an NV (Non-Volatile) index in the TPM with the created PCR policy.
+1. Checking whether the pcr is extended or not. If extended it will proceed further otherwise the process should be terminated.
+2. Verifying the existence of the measured.pcrvalues, in the script directory.If not, it will create measured.pcrvalues.
+3. Measured boot check using tpm2_policypcr api carried out by comparing current state value with the measured.pcrvalues value; this is done by TPM internally.
+4. Creating the policy with the satisfied pcr values for the defined pcr index.
 
 `tpm_nv_write_aes_256.sh`
 
 This script demonstrates how to securely store an AES-256 key in TPM2 NV memory based on the satisfaction of a PCR (Platform Configuration Register) policy. The script performs the following steps:
 
-1. creating an 32 byte aes key using openssl
-2. Writes the AES-256 key to the TPM NV index, ensuring that the key is only written if the PCR policy is satisfied.
+1. By using the get cap command, to get the list of defined nv index
+2. From the nv index list, If the mentioned nv address is not in the list it will create the nv index for the mentioned address.
+3. creating an 32 byte aes key using openssl
+4. Writes the AES-256 key to the TPM NV index, ensuring that the key is only written if the PCR policy is satisfied.
 
 `tpm_nv_read_aes_256.sh`
 This script demonstrates how to securely retrieve an AES-256 key from TPM2 NV (Non-Volatile) memory based on the satisfaction of a PCR (Platform Configuration Register) policy. The script performs the following steps:
 
-Defines the PCR index, NV index, and the output file for the AES-256 key.
-Reads the AES-256 key from the TPM NV index with the specified PCR policy.
-If the PCR policy is satisfied, the script successfully retrieves the AES-256 key and saves it to the specified output file.
+1. Defines the PCR index, NV index, and the output file for the AES-256 key. 
+2. By using the get cap command, to get the list of defined nv index
+3. If the mentioned nv index is not defined, we will define the nv index.
+4. Reads the AES-256 key from the TPM NV index with the specified PCR policy. If the PCR policy is satisfied, the script successfully retrieves the AES-256 key and saves it to the specified output file.
 
 `tpm_nv_write_rsa_2048.sh`
 
-This script demonstrates how to securely store an rsa-2048 key in TPM2 NV memory based on the satisfaction of a PCR policy. The script performs the following steps:
+This script demonstrates how to securely store an rsa-2048 key in TPM2 NV memory based on the satisfaction of a PCR policy.
 
-1. creating an rsa key with 2048 bits length
-2. Calculate the size of the key content and split it into three segments
-3. Write the segments to the TPM NV index with the PCR policy, tpm verify internally the pcr.dat is belongs to the mentioned index or not.
-4. And removing all the segments.
+The script performs the following steps:
+
+1. By using the get cap command, to get the list of defined nv index.
+2. From the nv index list, If the mentioned nv address is not in the list it will create the nv index for the mentioned address with the current state value.
+3. Calculate the size of the key content and also the number of full segments
+4. Use a loop to split the key into full segments and write the key in mentioned TPM index, ensuring that the key is only written if the PCR policy is satisfied.
+5. Also writes the remaining bytes if any in the mentioned TPM index.
 
 
 `tpm_nv_read_rsa_2048.sh`
 
-This script demonstrates how to securely retrieve an rsa-2048 bit key from TPM2 NV (Non-Volatile) memory based on the satisfaction of a PCR (Platform Configuration Register) policy
+This script demonstrates how to securely retrive a rsa key from NV memory based on the satisfaction of a PCR.
 
-The script will perform the following steps:
+The script performs the following steps:
 
-1. Read key segments one by one from the TPM NV index with the specified PCR policy.
-2. Save key segments as separate files (key1.pem, key2.pem, key3.pem).
-3. Concatenate the key segments into one key file (key_con_2048.pem).
-4. Compare the concatenated key with the original key (key.pem).
-5. Display whether the keys match or not.
+1. By using the get cap command, to get the list of defined nv index.
+2. If the mentioned nv index is not defined, we will define the nv index.
+3. Calculate the size of the key content and also the number of full segments
+4. Using a loop,  to read the full segments key from the mentioned nv Index.
+5. And also read the remaining segments key from the mentioned nv Index.
 
+`tpm_nv_passphrase_write.sh`
+
+This script demonstrates how to securely store an passphrase from NV memory based on the satisfaction of a PCR.
+
+The script performs the following steps:
+
+1. Creating an data and passphrase file
+2. Generate the rsa key with the created passphrase.
+3. Sign the data with the encrypted private key.
+4. By using the get cap command, to get the list of defined nv index.
+5. If the mentioned nv index is not defined, we will define the nv index.
+6. From the nv index list, If the mentioned nv address is not in the list it will create the nv index for the mentioned address with the current state Pcr value.
+6. Writes the passphrase to the TPM NV index, ensuring that the passphrase is only written if the PCR policy is satisfied.
+
+`tpm_nv_passphrase_read.sh`
+
+This script demonstrates how to securely retrive a passphrase from NV memory based on the satisfaction of a PCR.
+
+The script performs the following steps:
+
+1. By using the get cap command, to get the list of defined nv index.
+2. If the mentioned nv index is not defined, we will define the nv index.
+3. Reads the passphrase from the TPM NV index with the specified pcr index.
+4. Then decrypt the encrypted private key with the passphrase file.
+5. By using decrypt private key, Extract the corresponding public key.
+6. Verify the signature using the public key.
 
 ## Usage
 Run the scripts:
@@ -78,6 +106,8 @@ Run the scripts:
 ./tpm_nv_read_aes_256.sh
 ./tpm_err_aes_nvwrite.sh
 ./tpm_err_aes_nvread.sh
+./tpm_nv_passphrase_read.sh
+./tpm_nv_passphrase_write.sh
 ```
 
 ### Notes:
