@@ -1,0 +1,46 @@
+From ba6ef872a49980b88dafe85f4f797f6d3d137682 Mon Sep 17 00:00:00 2001
+From: svsprasad96 <sivaprasad.sv@jasmin-infotech.com>
+Date: Mon, 25 Sep 2023 17:49:42 +0530
+Subject: [PATCH] added_spi_tpm_device_tree_cfg
+
+---
+ arch/arm64/boot/dts/freescale/imx8mm-evk-ecspi-slave.dts | 3 ++-
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi            | 6 +++---
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk-ecspi-slave.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk-ecspi-slave.dts
+index e06dbc00d9dc..e873fccfd666 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-evk-ecspi-slave.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-evk-ecspi-slave.dts
+@@ -3,7 +3,7 @@
+ // Copyright 2020 NXP
+ 
+ #include "imx8mm-evk.dts"
+-
++/*
+ /delete-node/&spidev0;
+ 
+ &ecspi2 {
+@@ -17,3 +17,4 @@ &pinctrl_ecspi2_cs {
+ 		MX8MM_IOMUXC_ECSPI2_SS0_ECSPI2_SS0		0x82
+ 	>;
+ };
++*/
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
+index ac3074ca2924..64d8b17e56c2 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
+@@ -238,10 +238,10 @@ &ecspi2 {
+ 	cs-gpios = <&gpio5 13 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ 
+-	spidev0: spi@0 {
++	tpm0: slb9670@0 {
++		compatible = "infineon,slb9670";
+ 		reg = <0>;
+-		compatible = "rohm,dh2228fv";
+-		spi-max-frequency = <500000>;
++		spi-max-frequency = <38000000>;
+ 	};
+ };
+ 

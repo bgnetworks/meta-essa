@@ -3,7 +3,11 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 SRC_URI:append:imx8mmevk = " \
     file://0001-HAB-encrypted-boot.patch \
     file://0002-Add-fastboot-commands.patch \
+   
+    ${@bb.utils.contains('TPM_ENABLE', '1', 'file://0003-added_tpm_spi_support.patch', '', d)} \
+    ${@bb.utils.contains('TPM_ENABLE', '1', 'file://0004-added_tpm_spi_device_tree_cfg.patch', '', d)} \
     ${@bb.utils.contains('TPM_ENABLE', '1', 'file://0005-added_tpm_pcr_cmds.patch', '', d)} \
+
 "
 
 SRC_URI:append:imx6ulevk = " \
