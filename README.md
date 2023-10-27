@@ -39,30 +39,41 @@ To contribute to the development of this BSP and/or submit patches for new board
 
 **Note:** Initramfs is tested with iMX6SoloX SABRE
 
-## Build and test
-```
+## Build
+Setup the build environment based on the target machine:
+
+```bash
 MACHINE=imx6sxsabresd DISTRO=fsl-imx-xwayland source setup-essa.sh -b <BUILD_DIR>
 ```
 
-Run the following command to build live initramfs image
+Build the core image
 
+```bash
+bitbake core-image-base
 ```
+
+Build live initramfs image
+
+```bash
 bitbake core-image-minimal-initramfs-bgn
 ```
 
-Run the following command to build mfg initramfs image
-```
+Build mfg initramfs image
+
+```bash
 bitbake core-image-minimal-mfg-initramfs-bgn
 ```
-Run the following command to build production initramfs image
-```
+
+Build production initramfs image
+
+```bash
 bitbake core-image-minimal-prod-initramfs-bgn
 ```
 
 
-Note:
+## Test
 
-To test live initramfs image:
+### To test live initramfs image
 
 Prepare the SD, by copying the wic image.
 Copy the u-boot into QSPI memory.
@@ -72,22 +83,29 @@ Stop at u-boot console & give below command.
 run liveinitramfskernelboot
 ```
 
-To test mfg initramfs image:
+### To test mfg initramfs image
 
-Prepare the SD, by copying the wic image.
-Copy the u-boot into QSPI memory.
-After the build, copy the `core-image-minimal-mfg-initramfs-imx6sxsabresd.cpio.gz` file to boot partition (FAT) in SD card.
-Stop at u-boot console & give below command.
-```
+- Prepare the SD, by copying the wic image.
+- Copy the u-boot into QSPI memory.
+- After the build, copy the `core-image-minimal-mfg-initramfs-imx6sxsabresd.cpio.gz` file to boot partition (FAT) in SD card.
+- Copy the `enckey_signing_private_key.pem` file to boot partition (FAT) in SD card.
+- Copy the `core-image-minimal-imx6sxsabresd.tar.bz2` rootfs tarball file to boot partition (FAT) in SD card.
+- Boot the device & Stop at u-boot console & give below command.
+```bash
 run mfginitramfskernelboot
 ```
-To test production initramfs image:
-
-After the build, copy the `core-image-minimal-prod-initramfs-imx6sxsabresd.cpio.gz` file to boot partition (FAT) in SD card.
-Generate the RSA key pair with length of 4096 and copy the private and public key file to boot partition (FAT) in SD card.
-Stop at u-boot console & give below command.
-```
-setenv mmcargs setenv bootargs console=${console},${baudrate} root=${mmcroot} hash=ea9db9cb2911f635e4678820e7a521e1d47689c9f8e65118a1466b508d44d68a
+### To test production initramfs image
+- After the build, copy the `core-image-minimal-prod-initramfs-imx6sxsabresd.cpio.gz` file to boot partition (FAT) in SD card.
+- Copy the `public_key_hash_file.bin` (hash of the public key which is used for encryption purpose) file to boot partition (FAT) in SD card.
+- Copy the `core-image-minimal-imx6sxsabresd.tar.bz2` rootfs tarball file to boot partition (FAT) in SD card.
+- Stop at u-boot console & give below command.
+```bash
 run prodinitramfskernelboot
 ```
 
+### Note
+The below mentioned images need to be signed for closed board
+- u-boot
+- kernel
+- core-image-minimal-prod_initramfs-imx6sxsabresd.cpio.gz (for location 86800000)
+- public_key_hash_file.bin (for location 88800000)

@@ -59,4 +59,4 @@ for m in $MODULE_DIR/*; do
 done
 
 # Wait at the while loop after the encryption process executed
-fatal "Encryption process executed"
+fatal "Encryption process completed... reboot to device" 

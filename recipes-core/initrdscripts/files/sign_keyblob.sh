@@ -58,9 +58,6 @@ sign_keyblob_run(){
    #Remove the private key used for signing the key blob 
    rm -rf /mnt/enckey_signing_private_key.pem
 
-   # ToDo copy the public key to the FAT partition recived from the host
-   cp /mnt/enckey_signing_public_key.pem /mnt
-
    #Remove the black key and black key blob
     rm -rf /data/caam/enckey
     rm -rf /data/caam/enckey.bb

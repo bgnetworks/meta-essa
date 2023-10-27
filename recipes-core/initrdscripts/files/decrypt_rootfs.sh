@@ -6,7 +6,6 @@ decrypt_rootfs_enabled() {
 }
 
 decrypt_rootfs_run() {
-
 	# Import the key
 	caam-keygen import $KEYS_DIR/enckey.bb importKey
 
@@ -23,20 +22,24 @@ decrypt_rootfs_run() {
 		fatal "keyctl command failed"
 	fi
 
-       # Create the crypt_target using dmsetup
+	# Create the crypt_target using dmsetup
 	dmsetup -v create crypt_target --table "0 $(blockdev --getsz "$ROOTFS_PARTITION") crypt capi:tk(cbc(aes))-plain :36:logon:logkey: 0 $ROOTFS_PARTITION 0 1 sector_size:512"
 
-       # Check if dmsetup command was successful
-       if [ ! -e /dev/mapper/crypt_target ]; then
+	# Check if dmsetup command was successful
+	if [ ! -e /dev/mapper/crypt_target ]; then
 
-               fatal "Crypt target is not created"
-       fi
+		fatal "Crypt target is not created"
+	fi
 
-       # Mount the decrypted filesystem to $ROOTFS_DIR
-       mount -t ext4 /dev/mapper/crypt_target "$ROOTFS_DIR"
+	# Mount the decrypted filesystem to $ROOTFS_DIR
+	mount -t ext4 /dev/mapper/crypt_target "$ROOTFS_DIR"
 
-       # Check if can we mount encrypted root partition
-       if ! mountpoint -q $ROOTFS_DIR; then
+	# Check if can we mount encrypted root partition
+	if ! mountpoint -q $ROOTFS_DIR; then
 		fatal "Couldn't mount encrypted RootFS parition"
-       fi
+	fi
+       
+	if [ -e $KEYS_DIR/enckey.bb ]; then
+		rm -rf $KEYS_DIR/enckey.bb
+	fi
 }
