@@ -59,3 +59,6 @@ PACKAGE_EXCLUDE = " \
 # Replace $HOME with your home directory
 # DL_DIR = "$HOME/.yocto/downloads/"
 # SSTATE_DIR = "$HOME/.yocto/mx8mm/zeus/sstate-cache/"
+
+#TPM enable
+TPM_ENABLE = "0"

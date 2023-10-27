@@ -1,0 +1,33 @@
+From 13165bea88cc9d56e8294a2098d7d33aa4cfa695 Mon Sep 17 00:00:00 2001
+From: svsprasad96 <sivaprasad.sv@jasmin-infotech.com>
+Date: Mon, 25 Sep 2023 18:21:05 +0530
+Subject: [PATCH] added_tpm_spi_support
+
+---
+ configs/imx8mm_evk_defconfig | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/configs/imx8mm_evk_defconfig b/configs/imx8mm_evk_defconfig
+index feb5e53eff..0c2cbdb33c 100644
+--- a/configs/imx8mm_evk_defconfig
++++ b/configs/imx8mm_evk_defconfig
+@@ -212,3 +212,19 @@ CONFIG_IMX_HAB=y
+ CONFIG_FAT_WRITE=y
+ CONFIG_CMD_DEKBLOB=y
+ CONFIG_IMX_OPTEE_DEK_ENCAP=y
++
++CONFIG_CMD_TPM_V1=y
++CONFIG_CMD_TPM_V2=y
++CONFIG_CMD_TPM=y
++CONFIG_CMD_TPM_TEST=y
++CONFIG_TPM_V1=y
++CONFIG_TPM_TIS_SANDBOX=y
++CONFIG_TPM_V2=y
++CONFIG_TPM2_TIS_SANDBOX=y
++CONFIG_TPM2_TIS_SPI=y
++CONFIG_TPM=y
++
++CONFIG_CMD_SPI=y
++CONFIG_DEFAULT_SPI_BUS=0
++CONFIG_DEFAULT_SPI_MODE=0
++CONFIG_MXC_SPI=y
