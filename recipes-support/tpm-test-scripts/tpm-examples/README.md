@@ -20,12 +20,18 @@ This script intentionally attempts to overwrite an AES-256 key stored in a TPM2 
 
 `tpm_policy_creation.sh`
 
-This script shows how to create policy and also check the measured boot condition. The script performs the following steps:
+This script demonstrates how to create policies
 
-1. Checking whether the pcr is extended or not. If extended it will proceed further otherwise the process should be terminated.
-2. Verifying the existence of the measured.pcrvalues, in the script directory.If not, it will create measured.pcrvalues.
+1. Checking whether the pcr is extended or not. If extended it will proceed further otherwise the process should terminated.
+2. Create a policy by using the current state of the PCR.
+
+`tpm_check_measured_boot.sh`
+
+This script check the measure boot condition. 
+
+1. Checking whether the pcr is extended or not. If extended it will proceed further otherwise the process should terminated.
+2. Verifying the existence of the file to be checked (i.e) measured.pcrvalues, in the script directory.If not, it will create measured.pcrvalues and also the reboot is required.
 3. Measured boot check using tpm2_policypcr api carried out by comparing current state value with the measured.pcrvalues value; this is done by TPM internally.
-4. Creating the policy with the satisfied pcr values for the defined pcr index.
 
 `tpm_nv_write_aes_256.sh`
 
@@ -55,7 +61,6 @@ The script performs the following steps:
 3. Calculate the size of the key content and also the number of full segments
 4. Use a loop to split the key into full segments and write the key in mentioned TPM index, ensuring that the key is only written if the PCR policy is satisfied.
 5. Also writes the remaining bytes if any in the mentioned TPM index.
-
 
 `tpm_nv_read_rsa_2048.sh`
 
@@ -100,6 +105,7 @@ The script performs the following steps:
 Run the scripts:
 ```
 ./tpm_policy_creation.sh
+./tpm_check_measured_boot.sh
 ./tpm_nv_write_rsa_2048.sh
 ./tpm_nv_read_rsa_2048.sh
 ./tpm_nv_write_aes_256.sh

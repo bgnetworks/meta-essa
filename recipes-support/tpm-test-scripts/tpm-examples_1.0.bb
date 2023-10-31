@@ -11,6 +11,7 @@ LICENSE = "CLOSED"
 
 SRC_URI = " \
     file://tpm_policy_creation.sh \
+    file://tpm_check_measured_boot.sh \
     file://tpm_error_aes_nvread.sh \
     file://tpm_error_aes_nvwrite.sh \
     file://tpm_nv_read_aes_256.sh \
@@ -28,6 +29,7 @@ do_install() {
     install -d ${D}/etc/tpm/user_examples
       
     install -m 0755 ${WORKDIR}/tpm_policy_creation.sh ${D}/etc/tpm/user_examples
+    install -m 0755 ${WORKDIR}/tpm_check_measured_boot.sh ${D}/etc/tpm/user_examples
     install -m 0755 ${WORKDIR}/tpm_error_aes_nvread.sh ${D}/etc/tpm/user_examples
     install -m 0755 ${WORKDIR}/tpm_error_aes_nvwrite.sh ${D}/etc/tpm/user_examples
     install -m 0755 ${WORKDIR}/tpm_nv_read_aes_256.sh ${D}/etc/tpm/user_examples
@@ -40,6 +42,7 @@ do_install() {
 
 FILES:${PN} += " \
     /etc/tpm/user_examples/tpm_policy_creation.sh \
+    /etc/tpm/user_examples/tpm_check_measured_boot.sh \
     /etc/tpm/user_examples/tpm_error_aes_nvread.sh \
     /etc/tpm/user_examples/tpm_error_aes_nvwrite.sh \
     /etc/tpm/user_examples/tpm_nv_read_aes_256.sh \
